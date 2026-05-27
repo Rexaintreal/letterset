@@ -102,3 +102,98 @@ body {
     padding-top: 1rem;
     opacity: 0.6;
 }
+
+.how-section {
+    padding: 4rem 2.5rem;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.how-title {
+    font-family: 'Kalam', cursive;
+    font-weight: 700;
+    font-size: 2rem;
+    margin-bottom: 2.5rem;
+    text-align: center;
+}
+
+.how-cards {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.step-card {
+    background: white;
+    border: 2px solid #2d2d2d;
+    border-radius: 225px 15px 255px 15px / 15px 255px 15px 225px;
+    box-shadow: 6px 6px 0px 0px #2d2d2d;
+    padding: 2rem 1.5rem;
+    width: 280px;
+    position: relative;
+    transform: rotate(-0.5deg);
+}
+
+.step-card:nth-child(2) {
+    transform: rotate(0.8deg);
+}
+
+.step-card:nth-child(3) {
+    transform: rotate(-0.3deg);
+}
+
+.step-num {
+    font-family: 'Kalam', cursive;
+    font-size: 3rem;
+    font-weight: 700;
+    color: #e5e0d8;
+    line-height: 1;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.step-heading {
+    font-family: 'Kalam', cursive;
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin-bottom: 0.75rem;
+}
+
+.step-body {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #555;
+}
+
+.tips-section {
+    background: #fff9c4;
+    border-top: 2px solid #2d2d2d;
+    border-bottom: 2px solid #2d2d2d;
+    padding: 4rem 2.5rem;
+    margin: 2rem 0;
+}
+
+.tips-grid {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 900;
+    margin: 0 auto;
+}
+
+.tip-item {
+    width: 180px;
+    text-align: center;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #2d2d2d;
+}
+
+.tip-icon {
+    width: 48px;
+    height: 48px;
+    display: block;
+    margin: 0 auto 0.75rem;
+}
