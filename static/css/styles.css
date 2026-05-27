@@ -197,3 +197,44 @@ body {
     display: block;
     margin: 0 auto 0.75rem;
 }
+
+.footer {
+    border-top: 2px solid #2d2d2d;
+    padding: 2.5rem 2.5rem;
+    margin-top: 2rem;
+}
+
+.footer-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.footer-sub {
+    font-size: 0.9rem;
+    color: #888;
+}
+
+.footer-link {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.95rem;
+    color: #2d2d2d;
+    text-decoration: none;
+    border-bottom: 2px dashed #2d2d2d;
+    padding-bottom: 1px;
+}
+
+.footer-link:hover {
+    color: #ff4d4d;
+    border-color: #ff4d4d;
+}
+
+.footer-link:hover svg path {
+    fill: #ff4d4d;
+}
