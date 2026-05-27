@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, send_from_directory
 import os 
 import uuid
+import json, base64
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads'
@@ -39,6 +40,19 @@ def draw():
 @app.route('/preview/<session_id>')
 def preview(session_id):
     return render_template('preview.html', session_id=session_id)
+
+@app.route('/save_glyph', methods=['POST'])
+def save_glyph():
+    data = request.get_json()
+    sid = data['session_id']
+    char = data['char']
+    image_data = data['image'].split(',')[1]
+    folder = os.path.join(app.config['UPLOAD_FOLDER'], sid)
+    os.makedirs(folder, exist_ok=True)
+    safe = str(ord(char))
+    with open(os.path.join(folder, f'{safe}.png'), 'wb') as f:
+        f.write(base64.b64decode(image_data))
+    return 'ok'
 
 if __name__ == '__main__':
     app.run(debug=True)

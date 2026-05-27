@@ -52,3 +52,88 @@ if (dropZone) {
         fetch('/upload', { method: 'POST', body: formData}).then(res => { window.location.href = res.url });
     });
 }
+
+const drawCanvas = document.getElementById('drawCanvas');
+if (drawCanvas) {
+    const ctx = drawCanvas.getContext('2d');
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,!?()-_/@#&+'.split('');
+    let current = 0;
+    let drawing = false;
+
+    ctx.strokeStyle = '#2d2d2d';
+    ctx.lineWidth = 5;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    function getPos(e) {
+        const r = drawCanvas.getBoundingClientRect();
+        const src = e.touches ? e.touches[0] : e;
+        return { x: src.clientX - r.left, y: src.clientY - r.top };
+    }
+
+    drawCanvas.addEventListener('mousedown', e => { drawing = true; ctx.beginPath(); const p = getPos(e); ctx.moveTo(p.x, p.y); });
+    drawCanvas.addEventListener('mousemove', e => { if (!drawing) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); });
+    drawCanvas.addEventListener('mouseup', () => drawing = false);
+    drawCanvas.addEventListener('mouseleave', () => drawing = false);
+    drawCanvas.addEventListener('touchstart', e => { e.preventDefault(); drawing = true; ctx.beginPath(); const p = getPos(e); ctx.moveTo(p.x, p.y); });
+    drawCanvas.addEventListener('touchmove', e => { e.preventDefault(); if (!drawing) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); });
+    drawCanvas.addEventListener('touchend', () => drawing = false);
+
+    document.getElementById('clearBtn').addEventListener('click', () => {
+        ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+    });
+    
+    function isCanvasEmpty() {
+        const pixels = ctx.getImageData(0,0,drawCanvas.width, drawCanvas.height).data;
+        return !pixels.some(p => p !== 0);
+    }
+
+    function updateUI() {
+        document.getElementById('currentChar').textContent = chars[current];
+        document.getElementById('drawProgess').textContent = (current + 1) + ' of ' + chars.length;
+        ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+    }
+
+    document.getElementById('backBtn').addEventListener('click', () => {
+        if (current === 0) return;
+        current--;
+        updateUI();
+    });
+
+    document.getElementById('nextBtn').addEventListener('click', () => {
+        if (isCanvasEmpty()) {
+            alert('Please draw the character before continuing.');
+            return;
+        }
+        const dataURL = drawCanvas.toDataURL('image/png');
+        fetch('/save_glyph', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ session_id: SESSION_ID, char: chars[current], image: dataURL })
+        }).then(() => {
+            current++;
+            if (current >= chars.length) {
+                window.location.href = '/preview/' + SESSION_ID;
+            } else {
+                updateUI();
+            }
+        });
+    });
+    
+    document.getElementById('nextBtn').addEventListener('click', () => {
+        const dataURL = drawCanvas.toDataURL('image/png');
+        fetch('/save_glyph', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ session_id: SESSION_ID, char: chars[current], image: dataURL })
+        }).then(() => {
+            current++;
+            if (current >= chars.length) {
+                window.location.href = '/preview/' + SESSION_ID;
+            } else {
+                ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+                document.getElementById('currentChar').textContent = chars[current];
+                document.getElementById('drawProgress').textContent = (current + 1) + ' of ' + chars.length;
+            }
+        });
+    });
+}

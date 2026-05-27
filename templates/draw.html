@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Draw - Letterset</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            paper:  '#fdfbf7',
+                            pencil: '#2d2d2d',
+                            muted:  '#e5e0d8',
+                            red:    '#ff4d4d',
+                            blue:   '#2d5da1',
+                            yellow: '#fff9c4',
+                        },
+                        fontFamily: {
+                            hand:   ['Patrick Hand', 'cursive'],
+                            marker: ['Kalam', 'cursive'],
+                        }
+                    }
+                }
+            }
+        </script>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+        <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <nav class="nav-bar">
+            <a href="/" class="nav-logo">Letterset</a>
+            <a href="/" class="btn-secondary">✕ Cancel</a>
+        </nav>
+        <main class="draw-main">
+            <div class="draw-meta">
+                <span class="draw-progress" id="drawProgress">1 of 74</span>
+                <h1 class="draw-prompt">Draw: <span id="currentChar">A</span></h1>
+                <p class="draw-hint">Fill the box naturally don't worry about size.</p>
+            </div>
+            <div class="draw-canvas-wrap">
+                <canvas id="drawCanvas" class="draw-canvas" width="400" height="400"></canvas>
+            </div>
+            <div class="draw-actions">
+                <button class="btn-secondary" id="backBtn"><- Back</button>
+                <button class="btn-secondary" id="clearBtn">Clear</button>
+                <button class="btn-primary" id="nextBtn">Next -></button>
+            </div>
+        </main>
+        <script>
+            const SESSION_ID = "{{ session_id }}";
+        </script>
+        <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    </body>
+</html>>

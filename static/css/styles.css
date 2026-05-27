@@ -377,3 +377,57 @@ body {
 .template-download:hover svg path {
     stroke: #ff4d4d;
 }
+
+.draw-main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2.5rem 2rem;
+    gap: 1.5rem;
+}
+
+.draw-meta {
+    text-align: center;
+}
+
+.draw-progress {
+    font-size: 0.9rem;
+    color: #aaa;
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+.draw-prompt {
+    font-family: 'Kalam', cursive;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+.draw-prompt span {
+    color: #ff4d4d;
+}
+
+.draw-hint {
+    font-size: 0.9rem;
+    color: #aaa;
+}
+
+.draw-canvas-wrap {
+    border: 3px solid #2d2d2d;
+    border-radius: 225px 15px 255px 15px / 15px 255px 15px 225px;
+    box-shadow: 8px 8px 0px 0px #2d2d2d;
+    overflow: hidden;
+    background: white;
+}
+
+.draw-canvas {
+    display: block;
+    cursor: crosshair;
+    touch-action: none;
+}
+
+.draw-actions {
+    display: flex;
+    gap: 1rem;
+}
