@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, send_from_directory
 import os 
 import uuid
 
@@ -26,6 +26,10 @@ def upload():
 @app.route('/map/<session_id>')
 def map_view(session_id):
     return render_template('map.html', session_id=session_id)
+
+@app.route('/template')
+def download_template():
+    return send_from_directory('static', 'template.pdf', as_attachment=True)
 
 if __name__ == '__main__':
     app.run(debug=True)

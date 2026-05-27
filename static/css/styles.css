@@ -356,3 +356,24 @@ body {
     display: flex;
     justify-content: flex-end;
 }
+
+.template-download {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.9rem;
+    color: #2d5da1;
+    text-decoration: none;
+    border-bottom: 2px dashed #2d5da1;
+    padding-bottom: 1px;
+    margin-bottom: 1.5rem;
+}
+
+.template-download:hover {
+    color: #ff4d4d;
+    border-color: #ff4d4d;
+}
+
+.template-download:hover svg path {
+    stroke: #ff4d4d;
+}
