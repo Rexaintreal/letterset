@@ -329,3 +329,30 @@ body {
     padding: 0.75rem;
     font-size: 1.1rem;
 }
+
+.map-main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+}
+
+.map-header {
+     margin-bottom: 2.5rem;
+}
+
+.glyph-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+}
+
+.map-placeholder {
+    color: #aaa;
+    font-size: 0.95rem;
+}
+
+.map-actions {
+    display: flex;
+    justify-content: flex-end;
+}

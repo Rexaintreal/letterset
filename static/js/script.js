@@ -41,4 +41,14 @@ if (dropZone) {
         dropZone.style.display = 'flex';
         fileInput.value = '';
     });
+
+    submitBtn.addEventListener('click', () => {
+        const file = fileInput.files[0];
+        if (!file) return;
+        const formData = new FormData();
+        formData.append('sheet', file);
+        submitBtn.textContent = 'Processing...';
+        submitBtn.style.opacity = '0.6';
+        fetch('/upload', { method: 'POST', body: formData}).then(res => { window.location.href = res.url });
+    });
 }

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Map letters - Letterset</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            paper:  '#fdfbf7',
+                            pencil: '#2d2d2d',
+                            muted:  '#e5e0d8',
+                            red:    '#ff4d4d',
+                            blue:   '#2d5da1',
+                            yellow: '#fff9c4',
+                        },
+                        fontFamily: {
+                            hand:   ['Patrick Hand', 'cursive'],
+                            marker: ['Kalam', 'cursive'],
+                        }
+                    }
+                }
+            }
+        </script>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+        <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <nav class="nav-bar">
+            <a href="/" class="nav-logo">Letterset</a>
+            <a href="/upload" class="btn-primary">Start over</a>
+        </nav>
+        <main class="map-main">
+            <div class="map-header">
+                <h1 class="upload-title">Check your letters</h1>
+                <p class="upload-sub">We found these characters in your sheet. Fix any labels that look wrong, then hit continue.</p>
+            </div>
+            <div class="lyph-grid" id="glyphGrid">
+                <p class="map-placeholder">No glyphs detected yet - processing coming soon.</p>
+            </div>
+            <div class="map-actions">
+                <a href="/preview/{{ session_id }}" class="btn-primary">Looks good, build my font →</a>
+            </div>
+        </main>
+        <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    </body>
+</html>
