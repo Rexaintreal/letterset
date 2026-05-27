@@ -1,0 +1,104 @@
+body {
+    background-color: #fdfbf7;
+    background-image: radial-gradient(#e5e0d8 1px, transparent 1px);
+    background-size: 24px 24px;
+    font-family: 'Patrick Hand', cursive;
+    color: #2d2d2d;
+}
+
+.nav-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 2.5rem;
+    border-bottom: 2px solid #2d2d2d;
+}
+
+.nav-logo {
+    font-family: 'Kalam', cursive;
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: #2d2d2d;
+    text-decoration: none;
+}
+
+.btn-primary {
+    font-family: 'Patrick Hand', cursive;
+    font-size: 1rem;
+    color: #2d2d2d;
+    background: white;
+    text-decoration: none;
+    padding: 0.5rem 1.25rem;
+    border: 3px solid #2d2d2d;
+    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+    box-shadow: 4px 4px 0px 0px #2d2d2d;
+    transition: all 0.1s ease;
+    display: inline-block;
+}
+
+.btn-primary:hover {
+    background: #ff4d4d;
+    color: white;
+    box-shadow: 2px 2px 0px 0px #2d2d2d;
+    transform: translate(2px, 2px);
+}
+
+.btn-primary:active {
+    box-shadow: none;
+    transform: translate(4px, 4px);
+}
+
+.hero {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 1rem;
+    padding: 5rem 2.5rem 3rem;
+}
+
+.hero-title {
+    font-family: 'Kalam', cursive;
+    font-weight: 700;
+    font-size: 3rem;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+}
+
+.hero-sub {
+    font-size: 1.1rem;
+    color: #555;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.btn-secondary {
+    font-family: 'Patrick Hand', cursive;
+    font-size: 1rem;
+    color: #2d2d2d;
+    background: #e5e0d8;
+    text-decoration: none;
+    padding: 0.5rem 1.25rem;
+    border: 3px solid #2d2d2d;
+    border-radius: 15px 255px 15px 225px / 225px 15px 255px 15px;
+    box-shadow: 4px 4px 0px 0px #2d2d2d;
+    transition: all 0.1 ease;
+    display: inline-block;
+}
+
+.btn-secondary:hover {
+    background: #2d5da1;
+    color: white;
+    box-shadow: 2px 2px 0px 0px #2d2d2d;
+    transform: translate(2px, 2px);
+}
+
+.hero-arrow {
+    padding-top: 1rem;
+    opacity: 0.6;
+}
