@@ -238,3 +238,94 @@ body {
 .footer-link:hover svg path {
     fill: #ff4d4d;
 }
+
+.upload-main {
+    display: flex;
+    justify-content: center;
+    padding: 4rem 2rem;
+}
+
+.upload-card {
+    background: white;
+    border: 2px solid #2d2d2d;
+    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+    box-shadow: 8px 8px 0px 0px #2d2d2d;
+    padding: 3rem 2.5rem;
+    width: 100%;
+    max-width: 540px;
+}
+
+.upload-title {
+    font-family: 'Kalam', cursive;
+    font-weight: 700;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.upload-sub {
+    color: #555;
+    margin-bottom: 2rem;
+    font-size: 1rem;
+}
+
+.drop-zone {
+    border: 3px dashed #2d2d2d;
+    border-radius: 15px 255px 15px 225px / 225px 15px 255px 15px;
+    padding: 3rem 2rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background 0.15s ease;
+    cursor: pointer;
+}
+
+.drop-zone.dragover {
+    background: #fff9c4;
+    border-style: solid;
+}
+
+.drop-label {
+    font-family: 'Kalam', cursive;
+    font-size: 1.1rem;
+    margin-top: 0.5rem;
+}
+
+.drop-sub {
+    color: #aaa;
+    font-size: 0.9rem;
+}
+
+.file-preview {
+    margin-top: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    border: 2px solid #e5e0d8;
+    border-radius: 12px;
+}
+
+.file-preview img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border: 2px solid #2d2d2d;
+    border-radius: 8px;
+}
+
+.preview-name {
+    font-size: 0.9rem;
+    color: #555;
+    margin-bottom: 0.5rem;
+    word-break: break-all;
+}
+
+.upload-submit {
+    margin-top: 1.5rem;
+    width: 100%;
+    text-align: center;
+    padding: 0.75rem;
+    font-size: 1.1rem;
+}

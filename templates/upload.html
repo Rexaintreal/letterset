@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Upload — Letterset</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            paper:  '#fdfbf7',
+                            pencil: '#2d2d2d',
+                            muted:  '#e5e0d8',
+                            red:    '#ff4d4d',
+                            blue:   '#2d5da1',
+                            yellow: '#fff9c4',
+                        },
+                        fontFamily: {
+                            hand:   ['Patrick Hand', 'cursive'],
+                            marker: ['Kalam', 'cursive'],
+                        }
+                    }
+                }
+            }
+        </script>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+        <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <nav class="nav-bar">
+            <a href="/" class="nav-logo">Letterset</a>
+            <a href="/upload" class="btn-primary">Make my font</a>
+        </nav>
+        <main class="upload-main">
+            <div class="upload-card">
+                <h1 class="upload-title">Upload your sheet</h1>
+                <p class="upload-sub">Photograph your filled template and drop it below.</p>
+                <div class="drop-zone" id="dropZone">
+                    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M24 6 L24 32" stroke="#2d2d2d" stroke-width="2.5" stroke-linecap="round"/>
+                        <path d="M14 16 L24 6 L34 16" stroke="#2d2d2d" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M8 34 L8 40 L40 40 L40 34" stroke="#2d2d2d" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <p class="drop-label">Drop your photo here</p>
+                    <p class="drop-sub">or</p>
+                    <label for="fileInput" class="btn-primary" style="cursor:pointer;">Browse files</label>
+                    <input type="file" id="fileInput" accept="image/*" style="display:none;">
+                </div>
+                <div class="file-preview" id="filePreview" style="display:none;">
+                    <img src="" alt="Preview" id="previewImg">
+                    <div class="preview-info">
+                        <p class="preview-name" id="fileName"></p>
+                        <button class="btn-secondary" id="clearFile">Remove</button>
+                    </div>
+                </div>
+                <button class="btn-primary upload-submit" id="submitBtn" style="display:none;">
+                    Process my sheet ->
+                </button>
+            </div>
+        </main>
+        <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    </body>
+</html>
