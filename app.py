@@ -31,5 +31,14 @@ def map_view(session_id):
 def download_template():
     return send_from_directory('static', 'template.pdf', as_attachment=True)
 
+@app.route('/draw')
+def draw():
+    session_id = str(uuid.uuid4())[:8]
+    return render_template('draw.html', session_id=session_id)
+
+@app.route('/preview/<session_id>')
+def preview(session_id):
+    return render_template('preview.html', session_id=session_id)
+
 if __name__ == '__main__':
     app.run(debug=True)
