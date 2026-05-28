@@ -563,3 +563,31 @@ body {
     border-color: #2d2d2d;
     box-shadow: 0 0 0 2px #2d2d2d44;
 }
+
+.draw-preview-strip {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 1.25rem;
+    background: #fff9c4;
+    border: 2px solid #2d2d2d;
+    border-radius: 12px;
+    max-width: 400;
+    min-height: 48px;
+    flex-wrap: wrap;
+}
+
+.preview-strip-chars {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+
+.preview-strip-chars img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    border: 1px solid #e5e0d8;
+    border-radius: 4px;
+    background: white;
+}

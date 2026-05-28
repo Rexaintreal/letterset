@@ -61,24 +61,13 @@ if (drawCanvas) {
     let drawing = false;
 
     ctx.strokeStyle = '#2d2d2d';
-    ctx.lineWidth = 14;
+    ctx.lineWidth = 8;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
-    document.querySelectorAll('.tool-size').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.tool-size').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            ctx.lineWidth = parseInt(btn.dataset.size);
-        });
+    document,getElementById('brushSlider').addEventListener('input', function() {
+        ctx.lineWidth = parseInt(this.value);
+        document.getElementById('brushVal').textContent = this.value + 'px';
     });
-
-    document.querySelectorAll('.tool-color').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.tool-color').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            ctx.strokeStyle = btn.dataset.color;
-        })
-    })
     function getPos(e) {
         const r = drawCanvas.getBoundingClientRect();
         const src = e.touches ? e.touches[0] : e;
@@ -125,6 +114,10 @@ if (drawCanvas) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ session_id: SESSION_ID, char: chars[current], image: dataURL })
         }).then(() => {
+            const thumb = document.createElement('img');
+            thumb.src = dataURL;
+            thumb.title = chars[current];
+            document.getElementById('previewChars').appendChild(thumb);
             current++;
             if (current >= chars.length) {
                 window.location.href = '/preview/' + SESSION_ID;
