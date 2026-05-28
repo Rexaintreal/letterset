@@ -40,8 +40,11 @@ def png_to_outlines(path):
             fy = int(ASCENDER - y * (ASCENDER - DESCENDER) / CANVAS)
             pts.append((fx, fy))
         parent = hierarchy[0][i][3]
+        grandparent = hierarchy[0][parent][3] if parent != -1 else -1
         if parent == -1:
             pts.reverse()
+        elif grandparent != -1:
+            continue
         result.append(pts)
     return result
 

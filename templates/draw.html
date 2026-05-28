@@ -39,6 +39,20 @@
                 <h1 class="draw-prompt">Draw: <span id="currentChar">A</span></h1>
                 <p class="draw-hint">Fill the box naturally don't worry about size.</p>
             </div>
+            <div class="draw-toolbar">
+                <div class="tool-group">
+                    <span class="tool-label">Size</span>
+                    <button class="tool-size active" data-size="8" style="width:18px;height:18px;">●</button>
+                    <button class="tool-size" data-size="14" style="width:24px;height:24px;">●</button>
+                    <button class="tool-size" data-size="22" style="width:30px;height:30px;">●</button>
+                </div>
+                <div class="tool-group">
+                    <span class="tool-label">Color</span>
+                    <button class="tool-color active" data-color="#2d2d2d" style="background:#2d2d2d;"></button>
+                    <button class="tool-color" data-color="#ff4d4d" style="background:#ff4d4d;"></button>
+                    <button class="tool-color" data-color="#2d5da1" style="background:#2d5da1;"></button>
+                </div>
+            </div>
             <div class="draw-canvas-wrap">
                 <canvas id="drawCanvas" class="draw-canvas" width="400" height="400"></canvas>
             </div>

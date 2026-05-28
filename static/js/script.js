@@ -64,6 +64,21 @@ if (drawCanvas) {
     ctx.lineWidth = 14;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
+    document.querySelectorAll('.tool-size').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.tool-size').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            ctx.lineWidth = parseInt(btn.dataset.size);
+        });
+    });
+
+    document.querySelectorAll('.tool-color').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.tool-color').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            ctx.strokeStyle = btn.dataset.color;
+        })
+    })
     function getPos(e) {
         const r = drawCanvas.getBoundingClientRect();
         const src = e.touches ? e.touches[0] : e;
