@@ -89,7 +89,7 @@ if (drawCanvas) {
 
     function updateUI() {
         document.getElementById('currentChar').textContent = chars[current];
-        document.getElementById('drawProgess').textContent = (current + 1) + ' of ' + chars.length;
+        document.getElementById('drawProgress').textContent = (current + 1) + ' of ' + chars.length;
         ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
     }
 
@@ -115,24 +115,6 @@ if (drawCanvas) {
                 window.location.href = '/preview/' + SESSION_ID;
             } else {
                 updateUI();
-            }
-        });
-    });
-    
-    document.getElementById('nextBtn').addEventListener('click', () => {
-        const dataURL = drawCanvas.toDataURL('image/png');
-        fetch('/save_glyph', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ session_id: SESSION_ID, char: chars[current], image: dataURL })
-        }).then(() => {
-            current++;
-            if (current >= chars.length) {
-                window.location.href = '/preview/' + SESSION_ID;
-            } else {
-                ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
-                document.getElementById('currentChar').textContent = chars[current];
-                document.getElementById('drawProgress').textContent = (current + 1) + ' of ' + chars.length;
             }
         });
     });
