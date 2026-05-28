@@ -58,13 +58,14 @@ if (drawCanvas) {
     const ctx = drawCanvas.getContext('2d');
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,!?()-_/@#&+'.split('');
     let current = 0;
+    const drawings = {};
     let drawing = false;
 
     ctx.strokeStyle = '#2d2d2d';
     ctx.lineWidth = 8;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
-    document,getElementById('brushSlider').addEventListener('input', function() {
+    document.getElementById('brushSlider').addEventListener('input', function() {
         ctx.lineWidth = parseInt(this.value);
         document.getElementById('brushVal').textContent = this.value + 'px';
     });
@@ -100,7 +101,14 @@ if (drawCanvas) {
     document.getElementById('backBtn').addEventListener('click', () => {
         if (current === 0) return;
         current--;
-        updateUI();
+        ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+        document.getElementById('currentChar').textContent = chars[current];
+        document.getElementById('drawProgress').textContent = (current + 1) + ' of ' + chars.length;
+        if (drawings[current]) {
+            const img = new Image();
+            img.onload = () => ctx.drawImage(img, 0, 0);
+            img.src = drawings[current]
+        }
     });
 
     document.getElementById('nextBtn').addEventListener('click', () => {
@@ -109,15 +117,22 @@ if (drawCanvas) {
             return;
         }
         const dataURL = drawCanvas.toDataURL('image/png');
+        drawings[current] = dataURL;
         fetch('/save_glyph', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ session_id: SESSION_ID, char: chars[current], image: dataURL })
         }).then(() => {
-            const thumb = document.createElement('img');
-            thumb.src = dataURL;
-            thumb.title = chars[current];
-            document.getElementById('previewChars').appendChild(thumb);
+            const existingThumb = document.querySelector(`#previewChars img[data-index="${current}"]`);
+            if (existingThumb) {
+                existingThumb.src = dataURL;
+            } else {
+                const thumb = document.createElement('img');
+                thumb.src = dataURL;
+                thumb.title = chars[current];
+                thumb.dataset.index = current;
+                document.getElementById('previewChars').appendChild(thumb);
+            }
             current++;
             if (current >= chars.length) {
                 window.location.href = '/preview/' + SESSION_ID;
