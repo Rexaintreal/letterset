@@ -60,7 +60,7 @@ def draw_glyph(contours):
         pen.closePath()
     return pen.glyph()
 
-def build_font(session_folder, output_path=None):
+def build_font(session_folder, output_path=None, font_name='MyFont'):
     if output_path is None:
         output_path = os.path.join(session_folder, 'output.ttf')
 
@@ -97,16 +97,16 @@ def build_font(session_folder, output_path=None):
     fb.setupHorizontalMetrics(metrics)
     fb.setupHorizontalHeader(ascent=ASCENDER, descent=DESCENDER)
     fb.setupNameTable({
-        'familyName': 'Letterset',
+        'familyName': font_name,
         'styleName':  'Regular',
     })
     fb.font['name'].setName('Copyright 2026 Letterset', 0, 3, 1, 0x0409)
-    fb.font['name'].setName('Letterset', 1, 3, 1, 0x0409)
+    fb.font['name'].setName(font_name, 1, 3, 1, 0x0409)
     fb.font['name'].setName('Regular', 2, 3, 1, 0x0409)
-    fb.font['name'].setName('Letterset-Regular', 3, 3, 1, 0x0409)
-    fb.font['name'].setName('Letterset Regular', 4, 3, 1, 0x0409)
+    fb.font['name'].setName(f'{font_name}-Regular', 3, 3, 1, 0x0409)
+    fb.font['name'].setName(f'{font_name} Regular', 4, 3, 1, 0x0409)
     fb.font['name'].setName('Version 1.0', 5, 3, 1, 0x0409)
-    fb.font['name'].setName('Letterset-Regular', 6, 3, 1, 0x0409)
+    fb.font['name'].setName(f'{font_name}-Regular', 6, 3, 1, 0x0409)
     fb.setupOS2(
         sTypoAscender=ASCENDER,
         sTypoDescender=DESCENDER,
@@ -119,7 +119,8 @@ def build_font(session_folder, output_path=None):
     now = int(time.time()) + MAC_EPOCH_DIFF
     fb.setupHead(unitsPerEm=UPM, created=now, modified=now)
     fb.setupPost()
-
+    with open(os.path.join(session_folder, 'fontname.txt'), 'w') as f:
+        f.write(font_name)
     fb.font.save(output_path)
     return output_path
 

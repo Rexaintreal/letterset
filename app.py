@@ -61,7 +61,9 @@ def build(session_id):
     if not os.path.isdir(folder):
         return jsonify({'error': 'session not found'}), 404
     try:
-        out = build_font(folder)
+        data = request.get_json(silent=True) or {}
+        font_name = data.get('name', 'MyFont')[:32].strip() or 'MyFont'
+        out = build_font(folder, font_name=font_name)
         return jsonify({'ttf': f'/download/{session_id}'})
     except Exception as e:
         import traceback
@@ -71,7 +73,9 @@ def build(session_id):
 @app.route('/download/<session_id>')
 def download(session_id):
     folder = os.path.join(app.config['UPLOAD_FOLDER'], session_id)
-    return send_from_directory(folder, 'output.ttf', as_attachment=True, download_name='letterset.ttf')
+    name_file = os.path.join(folder, 'fontname.txt')
+    font_name = open(name_file).read().strip() if os.path.exists(name_file) else 'letterset'
+    return send_from_directory(folder, 'output.ttf', as_attachment=True, download_name=f'{font_name}.ttf')
 
 if __name__ == '__main__':
     app.run(debug=True)

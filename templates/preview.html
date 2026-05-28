@@ -46,7 +46,8 @@
             <div class="preview-card">
                 <div class="preview-header">
                     <h1 class="upload-title">Your font is ready.</h1>
-                    <p class="upload-sub">Type below to try it out, then download your .ttf</p>
+                    <p class="upload-sub">Give it a name, try it out, then download the .ttf file to own it!</p>
+                    <input type="text" id="fontName" placeholder="My Handwriting" maxlength="32" style="margin-top:0.75rem; width:100%; padding:0.5rem 0.75rem; font-family:'Patrick Hand',cursive; font-size:1rem; border:2px solid #2d2d2d; border-radius:8px; outline:none; background:#fdfbf7;">
                 </div>
                 <div class="preview-box">
                     <div class="preview-text preview-display" id="previewDisplay" contenteditable="true" spellcheck="false">
@@ -74,7 +75,11 @@
                 btn.style.opacity = '0.5';
                 btn.disabled = true;
                 msg.textContent = 'Building your font....';
-                fetch(`/build/${SESSION_ID}`, { method: 'POST' }).then(r => r.json()).then(data => {
+                fetch(`/build/${SESSION_ID}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: 'MyFont' })
+                }).then(r => r.json()).then(data => {
                     if (data.error) {
                         msg.textContent = 'Build failed: ' + data.error;
                         return;
@@ -95,7 +100,15 @@
             });
 
             document.getElementById('downloadBtn').addEventListener('click', () => {
-                window.location.href = `/download/${SESSION_ID}`;
+                const name = document.getElementById('fontName').value.trim() || 'MyFont';
+
+                fetch(`/build/${SESSION_ID}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name })
+                }).then(() => {
+                    window.location.href = `/download/${SESSION_ID}`;
+                });
             });
         </script>
     </body>
