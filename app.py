@@ -64,6 +64,8 @@ def build(session_id):
         out = build_font(folder)
         return jsonify({'ttf': f'/download/{session_id}'})
     except Exception as e:
+        import traceback
+        traceback.print_exc()
         return jsonify({'error': str(e)}), 500
     
 @app.route('/download/<session_id>')

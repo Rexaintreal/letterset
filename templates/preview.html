@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+       <meta charset="UTF-8">
+       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+       <title>Preview - Letterset</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            paper:  '#fdfbf7',
+                            pencil: '#2d2d2d',
+                            muted:  '#e5e0d8',
+                            red:    '#ff4d4d',
+                            blue:   '#2d5da1',
+                            yellow: '#fff9c4',
+                        },
+                        fontFamily: {
+                            hand:   ['Patrick Hand', 'cursive'],
+                            marker: ['Kalam', 'cursive'],
+                        }
+                    }
+                }
+            }
+        </script>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+        <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+        <style>
+            @font-face {
+                font-family: 'UserFont';
+                src: url('/download/{{ session_id }}') format('truetype');
+            }
+            .preview-text {
+                font-family: 'UserFont', 'Patrick Hand', cursive;
+            }
+        </style>
+    </head>
+    <body>
+        <nav class="nav-bar">
+            <a href="/" class="nav-logo">Letterset</a>
+            <a href="/draw" class="btn-secondary">Draw another</a>
+        </nav>
+        <main class="preview-main">
+            <div class="preview-card">
+                <div class="preview-header">
+                    <h1 class="upload-title">Your font is ready.</h1>
+                    <p class="upload-sub">Type below to try it out, then download your .ttf</p>
+                </div>
+                <div class="preview-box">
+                    <div class="preview-text preview-display" id="previewDisplay" contenteditable="true" spellcheck="false">
+                        The quick brown fox jumps over the lazy dog.
+                    </div>
+                </div>
+                <div class="preview-size-row">
+                    <label class="preview-size-label">Size</label>
+                    <input type="range" min="24" max="120" value="64" id="sizeSlider" class="preview-slider">
+                    <span class="preview-size-val" id="sizeVal">64px</span>
+                </div>
+                <div class="preview-actions">
+                    <button class="btn-primary preview-download" id="downloadBtn">
+                        Download .ttf
+                    </button>
+                    <p class="preview-note" id="statusMsg"></p>
+                </div>
+            </div>
+        </main>
+        <script>
+            const SESSION_ID = "{{ session_id }}"
+            window.addEventListener('DOMContentLoaded', () => {
+                const msg = document.getElementById('statusMsg');
+                const btn = document.getElementById('downloadBtn');
+                btn.style.opacity = '0.5';
+                btn.disabled = true;
+                msg.textContent = 'Building your font....';
+                fetch(`/build/${SESSION_ID}`, { method: 'POST' }).then(r => r.json()).then(data => {
+                    if (data.error) {
+                        msg.textContent = 'Build failed: ' + data.error;
+                        return;
+                    }
+                    msg.textContent = 'Font ready!';
+                    btn.style.opacity = '1';
+                    btn.disabled = false;
+                    const style = document.createElement('style');
+                    style.textContent = `@font-face { font-family: 'UserFont'; src: url('/download/${SESSION_ID}?t=${Date.now()}') format('truetype'); }`;
+                    document.head.appendChild(style);
+                })
+                .catch(() => { msg.textContent = 'Something went wrong.'; });
+            });
+
+            document.getElementById('sizeSlider').addEventListener('input', function() {
+                document.getElementById('previewDisplay').style.fontSize = this.value + 'px';
+                document.getElementById('sizeVal').textContent = this.value + 'px';
+            });
+
+            document.getElementById('downloadBtn').addEventListener('click', () => {
+                window.location.href = `/download/${SESSION_ID}`;
+            });
+        </script>
+    </body>
+</html>

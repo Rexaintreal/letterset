@@ -2,6 +2,7 @@ import os
 import sys
 import cv2
 import numpy as np
+import time
 from fontTools.fontBuilder import FontBuilder
 from fontTools.pens.ttGlyphPen import TTGlyphPen
 
@@ -12,9 +13,16 @@ DESCENDER = -200
 CANVAS = 400
 
 def png_to_outlines(path):
-    img = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
+    img = cv2.imread(path, cv2.IMREAD_UNCHANGED)
     if img is None:
         return []
+    if img.shape[2] == 4:
+        alpha = img[:, :, 3] / 255.0
+        white = np.ones((img.shape[0], img.shape[1]), dtype=np.uint8) * 255
+        gray = cv2.cvtColor(img[:, :, :3], cv2.COLOR_BGR2GRAY)
+        img = (white * (1 - alpha) + gray * alpha).astype(np.uint8)
+    else:
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     img = cv2.resize(img, (CANVAS, CANVAS))
     _, bw = cv2.threshold(img, 200, 255, cv2.THRESH_BINARY_INV)
     bw = cv2.dilate(bw, np.ones((4, 4), np.uint8), iterations=1)
@@ -31,6 +39,7 @@ def png_to_outlines(path):
             fx = int(x * UPM / CANVAS)
             fy = int(ASCENDER - y * (ASCENDER - DESCENDER) / CANVAS)
             pts.append((fx, fy))
+        pts.reverse()
         result.append(pts)
     return result
 
@@ -92,17 +101,17 @@ def build_font(session_folder, output_path=None):
         'familyName': 'Letterset',
         'styleName':  'Regular',
     })
-    fb.setupOs2(
+    fb.setupOS2(
         sTypoAscender=ASCENDER,
         sTypoDescender=DESCENDER,
         sTypoLineGap=0,
         usWinAscent=ASCENDER,
         usWinDescent=abs(DESCENDER),
         fsType=0x0004,
-        panose=(2, 0, 5, 0, 0, 0, 0, 0, 0, 0),
+        achVendID="LTST",
     )
+    fb.setupHead(unitsPerEm=UPM, created=int(time.time()), modified=int(time.time()))
     fb.setupPost()
-    fb.setupHead(unitsPerEm=UPM)
 
     fb.font.save(output_path)
     return output_path
