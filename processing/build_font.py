@@ -11,6 +11,7 @@ UPM = 1000
 ASCENDER = 800
 DESCENDER = -200
 CANVAS = 400
+MAC_EPOCH_DIFF = 2082844800
 
 def png_to_outlines(path):
     img = cv2.imread(path, cv2.IMREAD_UNCHANGED)
@@ -25,10 +26,9 @@ def png_to_outlines(path):
         img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     img = cv2.resize(img, (CANVAS, CANVAS))
     _, bw = cv2.threshold(img, 200, 255, cv2.THRESH_BINARY_INV)
-    bw = cv2.dilate(bw, np.ones((4, 4), np.uint8), iterations=1)
-    contours, _ = cv2.findContours(bw, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_TC89_KCOS)
+    contours, hierarchy = cv2.findContours(bw, cv2.RETR_TREE, cv2.CHAIN_APPROX_TC89_KCOS)
     result = []
-    for c in contours:
+    for i, c in enumerate(contours):
         eps = 0.015 * cv2.arcLength(c, True)
         approx = cv2.approxPolyDP(c, eps, True)
         if len(approx) < 3:
@@ -39,7 +39,9 @@ def png_to_outlines(path):
             fx = int(x * UPM / CANVAS)
             fy = int(ASCENDER - y * (ASCENDER - DESCENDER) / CANVAS)
             pts.append((fx, fy))
-        pts.reverse()
+        parent = hierarchy[0][i][3]
+        if parent == -1:
+            pts.reverse()
         result.append(pts)
     return result
 
@@ -101,6 +103,13 @@ def build_font(session_folder, output_path=None):
         'familyName': 'Letterset',
         'styleName':  'Regular',
     })
+    fb.font['name'].setName('Copyright 2026 Letterset', 0, 3, 1, 0x0409)
+    fb.font['name'].setName('Letterset', 1, 3, 1, 0x0409)
+    fb.font['name'].setName('Regular', 2, 3, 1, 0x0409)
+    fb.font['name'].setName('Letterset-Regular', 3, 3, 1, 0x0409)
+    fb.font['name'].setName('Letterset Regular', 4, 3, 1, 0x0409)
+    fb.font['name'].setName('Version 1.0', 5, 3, 1, 0x0409)
+    fb.font['name'].setName('Letterset-Regular', 6, 3, 1, 0x0409)
     fb.setupOS2(
         sTypoAscender=ASCENDER,
         sTypoDescender=DESCENDER,
@@ -110,7 +119,8 @@ def build_font(session_folder, output_path=None):
         fsType=0x0004,
         achVendID="LTST",
     )
-    fb.setupHead(unitsPerEm=UPM, created=int(time.time()), modified=int(time.time()))
+    now = int(time.time()) + MAC_EPOCH_DIFF
+    fb.setupHead(unitsPerEm=UPM, created=now, modified=now)
     fb.setupPost()
 
     fb.font.save(output_path)
@@ -121,4 +131,4 @@ if __name__ == '__main__':
         print('Usage: python build_font.py <session_folder>')
         sys.exit(1)
     out = build_font(sys.argv[1])
-    print(f'Font saved → {out}')
+    print(f'Font saved -> {out}')

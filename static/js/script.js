@@ -61,7 +61,7 @@ if (drawCanvas) {
     let drawing = false;
 
     ctx.strokeStyle = '#2d2d2d';
-    ctx.lineWidth = 5;
+    ctx.lineWidth = 14;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
     function getPos(e) {
