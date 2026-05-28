@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request, redirect, url_for, send_from_directory
+from flask import Flask, render_template, request, redirect, url_for, send_from_directory, jsonify
 import os 
 import uuid
 import json, base64
+from processing.build_font import build_font
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads'
@@ -53,6 +54,22 @@ def save_glyph():
     with open(os.path.join(folder, f'{safe}.png'), 'wb') as f:
         f.write(base64.b64decode(image_data))
     return 'ok'
+
+@app.route('/build/<session_id>', methods=['POST'])
+def build(session_id):
+    folder = os.path.join(app.config['UPLOAD_FOLDER'], session_id)
+    if not os.path.isdir(folder):
+        return jsonify({'error': 'session not found'}), 404
+    try:
+        out = build_font(folder)
+        return jsonify({'ttf': f'/download/{session_id}'})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    
+@app.route('/download/<session_id>')
+def download(session_id):
+    folder = os.path.join(app.config['UPLOAD_FOLDER'], session_id)
+    return send_from_directory(folder, 'output.ttf', as_attachment=True, download_name='letterset.ttf')
 
 if __name__ == '__main__':
     app.run(debug=True)
