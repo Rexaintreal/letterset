@@ -19,6 +19,7 @@ if (dropZone) {
         };
         reader.readAsDataURL(file);
     }
+    dropZone.addEventListener('click', () => fileInput.click());
 
     dropZone.addEventListener('dragover', e => {
         e.preventDefault();
@@ -49,7 +50,9 @@ if (dropZone) {
         formData.append('sheet', file);
         submitBtn.textContent = 'Processing...';
         submitBtn.style.opacity = '0.6';
-        fetch('/upload', { method: 'POST', body: formData}).then(res => { window.location.href = res.url });
+        submitBtn.disabled = true;
+        fetch('/upload', { method: 'POST', body: formData })
+            .then(res => { window.location.href = res.url; });
     });
 }
 
@@ -88,8 +91,8 @@ if (drawCanvas) {
     });
     
     function isCanvasEmpty() {
-        const pixels = ctx.getImageData(0,0,drawCanvas.width, drawCanvas.height).data;
-        for (let i=3; i < pixels.length; i+=4) {
+        const pixels = ctx.getImageData(0, 0, drawCanvas.width, drawCanvas.height).data;
+        for (let i = 3; i < pixels.length; i += 4) {
             if (pixels[i] > 10) return false;
         }
         return true;
@@ -110,7 +113,7 @@ if (drawCanvas) {
         if (drawings[current]) {
             const img = new Image();
             img.onload = () => ctx.drawImage(img, 0, 0);
-            img.src = drawings[current]
+            img.src = drawings[current];
         }
     });
     document.getElementById('skipBtn').addEventListener('click', () => {

@@ -3,6 +3,7 @@ import os
 import uuid
 import json, base64
 from processing.build_font import build_font
+from processing.process_sheet import process_sheet
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads'
@@ -20,8 +21,12 @@ def upload():
             return redirect(url_for('upload'))
         ext = file.filename.rsplit('.', 1)[-1].lower()
         session_id = str(uuid.uuid4())[:8]
-        filename = f"{session_id}.{ext}"
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        img_path = os.path.join(app.config['UPLOAD_FOLDER'], f'{session_id}.{ext}')
+        file.save(img_path)
+        folder = os.path.join(app.config['UPLOAD_FOLDER'], session_id)
+        ok, n, err = process_sheet(img_path, folder)
+        if not ok or n == 0:
+            return redirect(url_for('upload'))
         return redirect(url_for('map_view', session_id=session_id))
     return render_template('upload.html')
 
@@ -76,6 +81,22 @@ def download(session_id):
     name_file = os.path.join(folder, 'fontname.txt')
     font_name = open(name_file).read().strip() if os.path.exists(name_file) else 'letterset'
     return send_from_directory(folder, 'output.ttf', as_attachment=True, download_name=f'{font_name}.ttf')
+
+@app.route('/glyphs/<session_id>')
+def glyphs(session_id):
+    folder = os.path.join(app.config['UPLOAD_FOLDER'], session_id)
+    CHARS = list('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,!?()-_/@#&+')
+    result = []
+    for char in CHARS:
+        code = ord(char)
+        if os.path.exists(os.path.join(folder, f'{code}.png')):
+            result.append({'char': char, 'code': code})
+    return jsonify({'glyphs': result})
+
+@app.route('/glyph_img/<session_id>/<int:code>')
+def glyph_img(session_id, code):
+    folder = os.path.join(app.config['UPLOAD_FOLDER'], session_id)
+    return send_from_directory(folder, f'{code}.png')
 
 if __name__ == '__main__':
     app.run(debug=True)

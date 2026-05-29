@@ -38,13 +38,28 @@
                 <h1 class="upload-title">Check your letters</h1>
                 <p class="upload-sub">We found these characters in your sheet. Fix any labels that look wrong, then hit continue.</p>
             </div>
-            <div class="lyph-grid" id="glyphGrid">
-                <p class="map-placeholder">No glyphs detected yet - processing coming soon.</p>
+            <div class="glyph-grid" id="glyphGrid">
+                <p class="map-placeholder" id="mapPlaceholder">Loading Glyphs....</p>
             </div>
             <div class="map-actions">
                 <a href="/preview/{{ session_id }}" class="btn-primary">Looks good, build my font →</a>
             </div>
         </main>
         <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+        <script>
+            const SESSION_ID = " {{ session_id }}".trim();
+            const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,!?()-_/@#&+'.split('');
+            fetch(`/glyphs/${SESSION_ID}`).then(r => r.json()).then(data => {
+                const grid = document.getElementById('glyphGrid');
+                document.getElementById('mapPlaceholder').remove();
+                data.glyphs.forEach(g => {
+                    const div = document.createElement('div');
+                    div.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:4px;';
+                    div.innerHTML = `<img src="/glyph_img/${SESSION_ID}/${g.code}" style="width:56px;height:56px;border:1px solid #e5e0d8;border-radius:4px;background:white;object-fit:contain;">
+                    <span style="font-size:0.75rem;color:#aaa;">${g.char}</span>`;
+                    grid.appendChild(div);
+                });
+            });
+        </script>
     </body>
 </html>
