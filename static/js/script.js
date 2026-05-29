@@ -89,7 +89,10 @@ if (drawCanvas) {
     
     function isCanvasEmpty() {
         const pixels = ctx.getImageData(0,0,drawCanvas.width, drawCanvas.height).data;
-        return !pixels.some(p => p !== 0);
+        for (let i=3; i < pixels.length; i+=4) {
+            if (pixels[i] > 10) return false;
+        }
+        return true;
     }
 
     function updateUI() {
@@ -110,12 +113,16 @@ if (drawCanvas) {
             img.src = drawings[current]
         }
     });
-
-    document.getElementById('nextBtn').addEventListener('click', () => {
-        if (isCanvasEmpty()) {
-            alert('Please draw the character before continuing.');
-            return;
+    document.getElementById('skipBtn').addEventListener('click', () => {
+        current++;
+        if (current >= chars.length) {
+            window.location.href = '/preview/' + SESSION_ID;
+        } else {
+            updateUI();
         }
+    });
+    document.getElementById('nextBtn').addEventListener('click', () => {
+        if (isCanvasEmpty()) return;
         const dataURL = drawCanvas.toDataURL('image/png');
         drawings[current] = dataURL;
         fetch('/save_glyph', {
@@ -140,5 +147,16 @@ if (drawCanvas) {
                 updateUI();
             }
         });
+    });
+    
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Enter') {
+            document.getElementById('nextBtn').click();
+        } else if (e.key === 'Backspace' && e.target === document.body) {
+            e.preventDefault();
+            ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+        } else if (e.key === 'ArrowLeft') {
+            document.getElementById('backBtn').click();
+        }
     });
 }
