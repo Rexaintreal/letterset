@@ -473,6 +473,25 @@ body {
     gap: 1rem;
 }
 
+.preview-spacing-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.preview-spacing-label {
+    font-size: 0.9rem;
+    color: #aaa;
+    white-space: nowrap;
+}
+
+.preview-spacing-val {
+    font-size: 0.9rem;
+    color: #aaa;
+    width: 3.5rem;
+    text-align: right;
+}
+
 .preview-size-label {
     font-size: 0.9rem;
     color: #aaa;

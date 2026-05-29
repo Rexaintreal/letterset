@@ -69,6 +69,16 @@
                     <input type="range" min="24" max="120" value="64" id="sizeSlider" class="preview-slider">
                     <span class="preview-size-val" id="sizeVal">64px</span>
                 </div>
+                <div class="preview-spacing-row">
+                    <label class="preview-spacing-label">Spacing</label>
+                    <input type="range" min="-5" max="40" value="0" id="spacingSlider" class="preview-slider">
+                    <span class="preview-spacing-val" id="spacingVal">0px</span>
+                </div>
+                <div class="preview-spacing-row">
+                    <label class="preview-spacing-label">Line&nbsp;height</label>
+                    <input type="range" min="80" max="250" value="130" id="lineSlider" class="preview-slider">
+                    <span class="preview-spacing-val" id="lineVal">1.3</span>
+                </div>
                 <div class="preview-actions">
                     <button class="btn-primary preview-download" id="downloadBtn">Download .ttf</button>
                     <p class="preview-note" id="statusMsg"></p>
@@ -145,7 +155,15 @@
                 document.getElementById('previewDisplay').style.fontSize = this.value + 'px';
                 document.getElementById('sizeVal').textContent = this.value + 'px';
             });
-
+            document.getElementById('spacingSlider').addEventListener('input', function() {
+                document.getElementById('previewDisplay').style.letterSpacing = this.value + 'px';
+                document.getElementById('spacingVal').textContent = this.value + 'px';
+            });
+            document.getElementById('lineSlider').addEventListener('input', function() {
+                const val = (this.value / 100).toFixed(1);
+                document.getElementById('previewDisplay').style.lineHeight = val;
+                document.getElementById('lineVal').textContent = val;
+            });
             document.querySelectorAll('.preset-btn').forEach(b => {
                 b.addEventListener('click', () => {
                     document.getElementById('previewDisplay').textContent = b.dataset.text;
