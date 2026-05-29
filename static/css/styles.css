@@ -756,3 +756,100 @@ body {
     border-color: #2d2d2d;
     color: #2d2d2d;
 }
+
+.processing-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(253, 251, 247, 0.92);
+    backdrop-filter: blur(4px);
+    z-index: 50;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+.processing-overlay.active {
+    display: flex;
+}
+
+.spinner {
+    width: 56px;
+    height: 56px;
+    border: 5px solid #e5e0d8;
+    border-top-color: #2d2d2d;
+    border-radius: 50%;
+    animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.processing-title {
+    font-family: 'Kalam', cursive;
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+.processing-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+}
+
+.processing-step {
+    font-size: 0.9rem;
+    color: #aaa;
+    opacity: 0;
+    transition: opacity 0.4s ease, color 0.3s;
+}
+
+.processing-step.active {
+    opacity: 1;
+    color: #2d2d2d;
+    font-weight: 600;
+}
+
+.processing-step.done {
+    opacity: 1;
+    color: #4caf50;
+}
+
+.error-banner {
+    display: none;
+    background: #fff0f0;
+    border: 2px solid #ff4d4d;
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
+    color: #cc0000;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.error-banner.visible {
+    display: block;
+}
+
+.upload-tips {
+    margin-top: 1.5rem;
+    padding: 1rem 1.25rem;
+    background: #fff9c4;
+    border: 2px solid #e5e0d8;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    color: #555;
+    line-height: 1.7;
+}
+
+.upload-tips strong {
+    display: block;
+    color: #2d2d2d;
+    margin-bottom: 0.25rem;
+    font-family: 'Kalam', cursive;
+    font-size: 1rem;
+}

@@ -29,6 +29,16 @@
         <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Patrick+Hand&display=swap" rel="stylesheet">
     </head>
     <body>
+        <div class="processing-overlay" id="processingOverlay">
+            <div class="spinner"></div>
+            <p class="processing-title">Processing your sheet...</p>
+            <div class="processing-steps">
+                <p class="processing-step active" id="step1">Detecting page edges</p>
+                <p class="processing-step" id="step2">Cropping each character box</p>
+                <p class="processing-step" id="step3">Extracting glyphs</p>
+                <p class="processing-step" id="step4">Almost done!</p>
+            </div>
+        </div>
         <nav class="nav-bar">
             <a href="/" class="nav-logo">Letterset</a>
             <a href="/draw" class="btn-primary">Draw my font</a>
@@ -40,6 +50,9 @@
                 <p style="font-size:0.85rem; margin-bottom:1.5rem;">
                     Prefer drawing on screen? <a href="/draw" style="color:#2d5da1; border-bottom: 1px dashed #2d5da1;">Draw your font instead -></a>
                 </p>
+                <div class="error-banner" id="errorBanner">
+                    We couldn't find any characters in that photo. Make sure the sheet is well-lit, flat, and shot straight down. Try again! :3
+                </div>
                 <a href="/template" class="template-download" target="_blank">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M12 4 L12 16 M6 11 L12 17 L18 11" stroke="#2d5da1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -68,6 +81,10 @@
                 <button class="btn-primary upload-submit" id="submitBtn" style="display:none;">
                     Process my sheet ->
                 </button>
+                <div class="upload-tips">
+                    <strong>Tips for a good photo</strong>
+                    Shoot straight down &nbsp;·&nbsp; Good natural light &nbsp;·&nbsp; Dark pen only &nbsp;·&nbsp; Flat surface, no wrinkles
+                </div>
             </div>
         </main>
         <script src="{{ url_for('static', filename='js/script.js') }}"></script>

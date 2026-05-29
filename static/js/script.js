@@ -5,8 +5,12 @@ const previewImg = document.getElementById('previewImg');
 const fileName = document.getElementById('fileName');
 const clearFile = document.getElementById('clearFile');
 const submitBtn = document.getElementById('submitBtn');
+const overlay = document.getElementById('processingOverlay');
 
 if (dropZone) {
+    if (new URLSearchParams(window.location.search).get('error') === '1') {
+        document.getElementById('errorBanner').classList.add('visible');
+    }
     function showPreview(file) {
         if (!file || !file.type.startsWith('image/')) return;
         const reader = new FileReader();
@@ -19,10 +23,21 @@ if (dropZone) {
         };
         reader.readAsDataURL(file);
     }
+    function resetUploadState() {
+        filePreview.style.display = 'none';
+        submitBtn.style.display = 'none';
+        dropZone.style.display = 'flex';
+        fileInput.value = '';
+        overlay.classList.remove('active');
+        submitBtn.disabled = false;
+        ['step1','step2','step3','step4'].forEach(id => {
+            document.getElementById(id).className = 'processing-step';
+        });
+    }
     dropZone.addEventListener('click', (e) => {
         if (e.target.closest('label') || e.target === fileInput) return;
-        fileInput.click()
-    })
+        fileInput.click();
+    });
 
     dropZone.addEventListener('dragover', e => {
         e.preventDefault();
@@ -39,23 +54,76 @@ if (dropZone) {
 
     fileInput.addEventListener('change', () => showPreview(fileInput.files[0]));
 
-    clearFile.addEventListener('click', () => {
-        filePreview.style.display = 'none';
-        submitBtn.style.display = 'none';
-        dropZone.style.display = 'flex';
-        fileInput.value = '';
-    });
+    clearFile.addEventListener('click', resetUploadState);
+
+    function animateSteps(fetchPromise) {
+        const stepIds = ['step1', 'step2', 'step3', 'step4'];
+        const stepDurations = [3000, 3500, 3000];
+        let currentStep = 0;
+        let fetchDone = false;
+        let stopped = false;
+        stepIds.forEach(id => {
+            document.getElementById(id).className = 'processing-step';
+        });
+
+        function activateStep(index) {
+            if (index > 0) {
+                document.getElementById(stepIds[index - 1]).className = 'processing-step done';
+            }
+            document.getElementById(stepIds[index]).className = 'processing-step active';
+        }
+
+        function advance() {
+            if (stopped) return;
+            currentStep++;
+
+            if (currentStep === stepIds.length - 1) {
+                if (fetchDone) {
+                    activateStep(currentStep);
+                }
+                return;
+            }
+
+            activateStep(currentStep);
+            setTimeout(advance, stepDurations[currentStep]);
+        }
+
+        activateStep(0);
+        setTimeout(advance, stepDurations[0]);
+
+        fetchPromise.then(() => {
+            stopped = true;
+            fetchDone = true;
+            stepIds.forEach((id, idx) => {
+                document.getElementById(id).className =
+                    idx < stepIds.length - 1 ? 'processing-step done' : 'processing-step active';
+            });
+        }).catch(() => {
+            stopped = true;
+        });
+    }
 
     submitBtn.addEventListener('click', () => {
         const file = fileInput.files[0];
         if (!file) return;
+        submitBtn.disabled = true;
         const formData = new FormData();
         formData.append('sheet', file);
-        submitBtn.textContent = 'Processing...';
-        submitBtn.style.opacity = '0.6';
-        submitBtn.disabled = true;
-        fetch('/upload', { method: 'POST', body: formData })
-            .then(res => { window.location.href = res.url; });
+        overlay.classList.add('active');
+        document.getElementById('errorBanner').classList.remove('visible');
+
+        const fetchPromise = fetch('/upload', { method: 'POST', body: formData });
+        animateSteps(fetchPromise);
+
+        fetchPromise
+            .then(res => {
+                setTimeout(() => { window.location.href = res.url; }, 600);
+            })
+            .catch(() => {
+                resetUploadState();
+                document.getElementById('errorBanner').classList.add('visible');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
     });
 }
 
@@ -154,7 +222,7 @@ if (drawCanvas) {
             }
         });
     });
-    
+
     document.addEventListener('keydown', e => {
         if (e.key === 'Enter') {
             document.getElementById('nextBtn').click();
