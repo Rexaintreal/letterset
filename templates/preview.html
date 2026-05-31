@@ -123,6 +123,20 @@
                 </div>
             </div>
         </div>
+        <div class="modal-root" id="errorModal"  aria-hidden="true">
+            <div class="modal-backdrop" id="errorModalBackdrop"></div>
+            <div class="modal-card" role="dialog" aria-modal="true" style="max-width: 400px;">
+                <div class="modal-card-header">
+                    <p class="modal-title" style="font-size: 1.2rem;">Build failed</p>
+                    <button class="modal-close-btn" id="errorModalCloseBtn" aria-label="Close">x</button>
+                </div>
+                <p id="errorModalMsg" style="font-size: 0.95rem; color: #555; align-self: flex-start; line-height: 1.6;"></p>
+                <div class="modal-actions">
+                    <a href="/draw" class="btn-secondary" style="font-size: 0.9rem;">Draw more glyphs</a>
+                    <button class="btn-primary" id="errorModalDismissBtn" style="font-size:0.9rem;">Got it</button>
+                </div>
+            </div>
+        </div>
         <script>const SESSION_ID = "{{ session_id }}";</script>
         <script src="{{ url_for('static', filename='js/script.js') }}"></script>
     </body>

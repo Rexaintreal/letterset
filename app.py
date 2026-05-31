@@ -9,6 +9,19 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads'
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
+MIN_GLYPHS = 5
+CHARS = list('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,!?()-_/@#&+')
+
+
+@app.errorhandler(404)
+def not_found(e):
+    return render_template('error.html', code=404, message='Page not found.'), 404
+
+
+@app.errorhandler(500)
+def server_error(e):
+    return render_template('error.html', code=500, message='Something went wrong one our end.'), 500
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -64,7 +77,15 @@ def save_glyph():
 def build(session_id):
     folder = os.path.join(app.config['UPLOAD_FOLDER'], session_id)
     if not os.path.isdir(folder):
-        return jsonify({'error': 'session not found'}), 404
+        return jsonify({'error': 'Session not found. Your drawings may have expired, Please start over. :('}), 404
+    glyph_count = sum(
+        1 for char in CHARS
+        if os.path.exists(os.path.join(folder, f'{ord(char)}.png'))
+    )
+    if glyph_count < MIN_GLYPHS:
+        return jsonify({
+            'error': f'Not enough glyphs to build a font. You need at least {MIN_GLYPHS} characters drawn, you have {glyph_count}'
+        }), 422
     try:
         data = request.get_json(silent=True) or {}
         font_name = data.get('name', 'MyFont')[:32].strip() or 'MyFont'
@@ -73,7 +94,7 @@ def build(session_id):
     except Exception as e:
         import traceback
         traceback.print_exc()
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'error': 'Font generation Failed. Try redrawing a few characters and building again.'}), 500
     
 @app.route('/download/<session_id>')
 def download(session_id):

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{{ code }} - Letterset</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            paper:  '#fdfbf7',
+                            pencil: '#2d2d2d',
+                            muted:  '#e5e0d8',
+                            red:    '#ff4d4d',
+                            blue:   '#2d5da1',
+                            yellow: '#fff9c4',
+                        },
+                        fontFamily: {
+                            hand:   ['Patrick Hand', 'cursive'],
+                            marker: ['Kalam', 'cursive'],
+                        }
+                    }
+                }
+            }
+        </script>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+        <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+    </head>
+    <body style="display: flex; flex-direction: column; min-height: 100vh;">
+        <nav class="nav-bar">
+            <a href="/" class="nav-logo">Letterset</a>
+            <a href="/" class="btn-primary">Go home</a>
+        </nav>
+        <main style="flex:1; display:flex; align-items:center; justify-content:center; padding:2rem;">
+            <div style="text-align: center; max-width: 480px;">
+                <div style="font-family: 'Kalam', cursive; font-size: clam(5rem, 18vw, 9rem); color: #e5e0d8; line-height: 1; margin-bottom: 0.5rem; letter-spacing: -2px;">{{ code }}</div>
+                <h1 style="font-family: 'Kalam', cursive; font-size: 1.5rem; color: #2d2d2d; margin-bottom: 0.75rem;">{{ message }}</h1>
+                {% if code == 404 %}
+                <p style="color:#888; font-size:0.95rem; margin-bottom:2rem;">The page you're looking for doesn't exist, or your session may have expired.</p>
+                {% else %}
+                <p style="color:#888; font-size:0.95rem; margin-bottom:2rem;">An unexpected error occurred. If the problem keeps happening, try starting a new session.</p>
+                {% endif %}
+                <div style="display:flex; gap:0.75rem; justify-content:center; flex-wrap:wrap;">
+                    <a href="/" class="btn-primary">Back to home</a>
+                    <a href="/draw" class="btn-secondary">Start drawing</a>
+                </div>
+            </div>
+        </main>
+        <footer class="footer">
+            <div class="footer-inner">
+                <span class="nav-logo">Letterset</span>
+                <p class="footer-sub">A Hack Club YSWS project turn your handwriting into a .ttf font.</p>
+            </div>
+        </footer>
+    </body>
+</html>
+ 

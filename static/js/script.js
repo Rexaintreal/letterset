@@ -376,7 +376,17 @@ if (drawCanvas) {
         buildBanner.classList.remove('build-banner--hidden');
         if (done) setTimeout(() => buildBanner.classList.add('build-banner--hidden'), 2800);
     }
+    function showErrorModal(msg) {
+        document.getElementById('errorModalMsg').textContent = msg;
+        document.getElementById('errorModal').setAttribute('aria-hidden', false)
+    }
 
+    function closeErrorModal() {
+        document.getElementById('errorModal').setAttribute('aria-hidden', true);
+    }
+    document.getElementById('errorModalCloseBtn').addEventListener('click', closeErrorModal);
+    document.getElementById('errorModalDismissBtn').addEventListener('click', closeErrorModal);
+    document.getElementById('errorModalBackdrop').addEventListener('click', closeErrorModal);
     function buildFont(name) {
         return fetch('/build/' + SESSION_ID, {
             method: 'POST',
@@ -403,8 +413,10 @@ if (drawCanvas) {
 
         buildFont('MyFont').then(function(data) {
             if (data.error) {
-                statusMsg.textContent = 'Build failed: ' + data.error;
-                setBannerState('Build failed.', false);
+                statusMsg.textContent = 'Build failed.';
+                setBannerState('Could not build font.', false);
+                downloadBtn.disabled = true;
+                showErrorModal(data.error);
                 return;
             }
             statusMsg.textContent = 'Font ready — click Download!';
@@ -412,8 +424,9 @@ if (drawCanvas) {
             reloadUserFont();
             setBannerState('Font built successfully!', true);
         }).catch(function() {
-            statusMsg.textContent = 'Something went wrong.';
+            statusMsg.textContent = 'Build failed.';
             setBannerState('Build failed.', false);
+            showErrorModal('Could not reach the server. Check your connection and try again.');
         });
 
         loadGlyphGallery();
@@ -545,7 +558,11 @@ if (drawCanvas) {
             statusMsg.textContent = 'Rebuilding font…';
             return buildFont(name);
         }).then(function(data) {
-            if (data && !data.error) {
+            if (data && data.error) {
+                statusMsg.textContent = 'Build failed.';
+                setBannerState('Could not build font.', false);
+                showErrorModal(data.error);
+            } else if (data && !data.error) {
                 reloadUserFont();
                 statusMsg.textContent = 'Font updated!';
                 setBannerState('Font updated!', true);
