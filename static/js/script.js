@@ -129,20 +129,87 @@ if (dropZone) {
 
 const drawCanvas = document.getElementById('drawCanvas');
 if (drawCanvas) {
-    const ctx = drawCanvas.getContext('2d');
+    const ctx = drawCanvas.getContext('2d', { willReadFrequently: true });
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,!?()-_/@#&+'.split('');
     let current = 0;
-    const drawings = {};
+    const drawings = new Array(chars.length).fill(null);
+    const skipped = new Set();
     let drawing = false;
 
     ctx.strokeStyle = '#2d2d2d';
-    ctx.lineWidth = 8;
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
     document.getElementById('brushSlider').addEventListener('input', function() {
         ctx.lineWidth = parseInt(this.value);
         document.getElementById('brushVal').textContent = this.value + 'px';
     });
+
+    function resizeCanvas() {
+        const wrap = drawCanvas.parentElement;
+        const w = wrap.clientWidth;
+        const h = wrap.clientHeight;
+        const snapshot = drawings[current];
+        drawCanvas.width = w;
+        drawCanvas.height = h;
+        ctx.lineWidth = parseInt(document.getElementById('brushSlider').value);
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        if (snapshot) {
+            const img = new Image();
+            img.onload = () => ctx.drawImage(img, 0, 0, w, h);
+            img.src = snapshot;
+        }
+    }
+    window.addEventListener('resize', resizeCanvas);
+    setTimeout(resizeCanvas, 50);
+    function isCanvasEmpty() {
+        const pixels = ctx.getImageData(0, 0, drawCanvas.width, drawCanvas.height).data;
+        for (let i = 3; i < pixels.length; i+=4) {
+            if (pixels[i] > 10) return false;
+        }
+        return true;
+    }
+    function updateProgress() {
+        const pct = Math.round((current/chars.length) *100);
+        document.getElementById('drawProgress').textContent = (current + 1) + ' of ' + chars.length;
+        const fill = document.getElementById('progressBarFill');
+        if (fill) fill.style.width = pct + '%';
+    }
+
+    function updateStrip() {
+        const container = document.getElementById('previewChars');
+        container.innerHTML = '';
+        for (let i = 0; i < current; i++) {
+            const src = drawings[i];
+            if (!src) continue;
+            const img = document.createElement('img');
+            img.src = src;
+            img.title = chars[i];
+            img.style.cssText = 'width:100%; aspect-ratio:1; object-fit:contain; border:1px solid #e5e0d8; border-radius:4px; background:white; display:block; min-height:72px;';
+            container.appendChild(img);
+        }
+    }
+
+    function restoreDrawing(index) {
+        ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+        const saved = drawings[index];
+        if (saved) {
+            const img = new Image();
+            img.onload = () => ctx.drawImage(img, 0, 0);
+            img.src = saved;
+        }
+    }
+
+    function saveCurrentDrawing() {
+        if (!isCanvasEmpty()) drawings[current] = drawCanvas.toDataURL('image/png');
+    }
+    
+    function goToChar(index) {
+        current = index;
+        document.getElementById('currentChar').textContent = chars[current];
+        updateProgress();
+        restoreDrawing(current);
+        updateStrip();
+    }
+
     function getPos(e) {
         const r = drawCanvas.getBoundingClientRect();
         const src = e.touches ? e.touches[0] : e;
@@ -160,67 +227,33 @@ if (drawCanvas) {
     document.getElementById('clearBtn').addEventListener('click', () => {
         ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
     });
-    
-    function isCanvasEmpty() {
-        const pixels = ctx.getImageData(0, 0, drawCanvas.width, drawCanvas.height).data;
-        for (let i = 3; i < pixels.length; i += 4) {
-            if (pixels[i] > 10) return false;
-        }
-        return true;
-    }
-
-    function updateUI() {
-        document.getElementById('currentChar').textContent = chars[current];
-        document.getElementById('drawProgress').textContent = (current + 1) + ' of ' + chars.length;
-        ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
-    }
 
     document.getElementById('backBtn').addEventListener('click', () => {
         if (current === 0) return;
-        current--;
-        ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
-        document.getElementById('currentChar').textContent = chars[current];
-        document.getElementById('drawProgress').textContent = (current + 1) + ' of ' + chars.length;
-        if (drawings[current]) {
-            const img = new Image();
-            img.onload = () => ctx.drawImage(img, 0, 0);
-            img.src = drawings[current];
-        }
+        saveCurrentDrawing();
+        goToChar(current - 1);
     });
+
     document.getElementById('skipBtn').addEventListener('click', () => {
-        current++;
-        if (current >= chars.length) {
-            window.location.href = '/preview/' + SESSION_ID;
-        } else {
-            updateUI();
-        }
+        skipped.add(current);
+        drawings[current] = null;
+        const next = current + 1;
+        if (next >= chars.length) window.location.href = '/preview/' + SESSION_ID;
+        else goToChar(next);
     });
     document.getElementById('nextBtn').addEventListener('click', () => {
         if (isCanvasEmpty()) return;
         const dataURL = drawCanvas.toDataURL('image/png');
         drawings[current] = dataURL;
+        skipped.delete(current);
         fetch('/save_glyph', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ session_id: SESSION_ID, char: chars[current], image: dataURL })
-        }).then(() => {
-            const existingThumb = document.querySelector(`#previewChars img[data-index="${current}"]`);
-            if (existingThumb) {
-                existingThumb.src = dataURL;
-            } else {
-                const thumb = document.createElement('img');
-                thumb.src = dataURL;
-                thumb.title = chars[current];
-                thumb.dataset.index = current;
-                document.getElementById('previewChars').appendChild(thumb);
-            }
-            current++;
-            if (current >= chars.length) {
-                window.location.href = '/preview/' + SESSION_ID;
-            } else {
-                updateUI();
-            }
-        });
+        }).catch(() => console.warn('save_glyph failed for', chars[current]));
+        const next = current + 1;
+        if (next >= chars.length) window.location.href = '/preview/' + SESSION_ID;
+        else goToChar(next);
     });
 
     document.addEventListener('keydown', e => {
@@ -233,6 +266,7 @@ if (drawCanvas) {
             document.getElementById('backBtn').click();
         }
     });
+    updateProgress();
 }
 
 (function () {

@@ -28,40 +28,43 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
         <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Patrick+Hand&display=swap" rel="stylesheet">
     </head>
-    <body>
-        <nav class="nav-bar">
+    <body style="overflow:hidden; height:100vh; display:flex; flex-direction:column;">
+        <nav class="nav-bar" style="flex-shrink:0;">
             <a href="/" class="nav-logo">Letterset</a>
             <a href="/" class="btn-secondary">✕ Cancel</a>
         </nav>
-        <main class="draw-main">
-            <div class="draw-meta">
-                <span class="draw-progress" id="drawProgress">1 of 74</span>
-                <h1 class="draw-prompt">Draw: <span id="currentChar">A</span></h1>
-                <p class="draw-hint">Fill the box naturally don't worry about size.</p>
-                <p class="draw-hint" style="margin-top:0.25rem; opacity:0.6;">Enter = next &nbsp;·&nbsp; <- = back &nbsp;·&nbsp; Backspace = clear</p>
+        <main style="display:flex; gap:1.5rem; padding:1.25rem 2rem; flex:1; min-height:0; box-sizing:border-box; align-items:stretch;">
+        <div style="display:flex; flex-direction:column; gap:0.75rem; flex:1.2; min-width:0; min-height:0;">
+                <div class="draw-meta" style="flex-shrink:0;">
+                    <span class="draw-progress" id="drawProgress">1 of 74</span>
+                    <div style="width:100%; height:8px; background:#e5e0d8; border-radius:99px; border:2px solid #2d2d2d; overflow:hidden; margin:0.3rem 0;">
+                        <div id="progressBarFill" style="height:100%; width:0%; background:#2d2d2d; border-radius:99px; transition:width 0.3s ease;"></div>
+                    </div>
+                    <h1 class="draw-prompt" style="font-size:clamp(1.4rem, 3vw, 2.5rem); margin:0.1rem 0;">Draw: <span id="currentChar">A</span></h1>
+                    <p class="draw-hint" style="margin:0;">Fill the box naturally — don't worry about size.</p>
+                    <p class="draw-hint" style="margin:0; opacity:0.6;">Enter = next &nbsp;·&nbsp; ← = back &nbsp;·&nbsp; Backspace = clear</p>
+                </div>
+                <div class="draw-toolbar" style="flex-shrink:0;">
+                    <span class="tool-label">Brush size</span>
+                    <input type="range" min="4" max="28" value="8" id="brushSlider" class="preview-slider" style="width:140px;">
+                    <span class="tool-label" id="brushVal">8px</span>
+                </div>
+                <div class="draw-canvas-wrap" style="flex:1; min-height:0; display:flex;">
+                    <canvas id="drawCanvas" class="draw-canvas" style="width:100%; height:100%; display:block;"></canvas>
+                </div>
+                <div class="draw-actions" style="flex-shrink:0;">
+                    <button class="btn-secondary" id="backBtn">← Back</button>
+                    <button class="btn-secondary" id="clearBtn">Clear</button>
+                    <button class="btn-secondary" id="skipBtn">Skip</button>
+                    <button class="btn-primary" id="nextBtn">Next →</button>
+                </div>
             </div>
-            <div class="draw-toolbar">
-                <span class="tool-label">Brush size</span>
-                <input type="range" min="4" max="28" value="8" id="brushSlider" class="preview-slider" style="width:160px;">
-                <span class="tool-label" id="brushVal">8px</span>
-            </div>
-            <div class="draw-preview-strip">
-                <span class="tool-label">so far:</span>
-                <div class="preview-strip-chars" id="previewChars"></div>
-            </div>
-            <div class="draw-canvas-wrap">
-                <canvas id="drawCanvas" class="draw-canvas" width="400" height="400"></canvas>
-            </div>
-            <div class="draw-actions">
-                <button class="btn-secondary" id="backBtn"><- Back</button>
-                <button class="btn-secondary" id="clearBtn">Clear</button>
-                <button class="btn-secondary" id="skipBtn">Skip</button>
-                <button class="btn-primary" id="nextBtn">Next -></button>
+            <div style="flex:1; min-width:0; display:flex; flex-direction:column; gap:0.5rem;">
+                <span class="tool-label" style="font-size:0.85rem; flex-shrink:0;">So far</span>
+                <div id="previewChars" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(72px, 1fr)); gap:4px; align-content:start;"></div>
             </div>
         </main>
-        <script>
-            const SESSION_ID = "{{ session_id }}";
-        </script>
+        <script>const SESSION_ID = "{{ session_id }}";</script>
         <script src="{{ url_for('static', filename='js/script.js') }}"></script>
     </body>
 </html>>
