@@ -59,16 +59,17 @@ body {
 .hero-title {
     font-family: 'Kalam', cursive;
     font-weight: 700;
-    font-size: 3rem;
-    line-height: 1.2;
-    margin-bottom: 1rem;
+    font-size: 3.8rem;
+    line-height: 1.15;
+    margin-bottom: 1.25rem;
 }
 
 .hero-sub {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     color: #555;
     margin-bottom: 2rem;
-    line-height: 1.6;
+    line-height: 1.7;
+    max-width: 520px;
 }
 
 .hero-buttons {
@@ -104,65 +105,87 @@ body {
 }
 
 .how-section {
-    padding: 4rem 2.5rem;
-    max-width: 1000px;
+    padding: 6rem 4rem;
+    max-width: 100%;
     margin: 0 auto;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .how-title {
     font-family: 'Kalam', cursive;
     font-weight: 700;
-    font-size: 2rem;
-    margin-bottom: 2.5rem;
+    font-size: 2.6rem;
+    margin-bottom: 3rem;
     text-align: center;
 }
 
 .how-cards {
     display: flex;
-    gap: 1.5rem;
+    gap: 2.5rem;
     flex-wrap: wrap;
     justify-content: center;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .step-card {
     background: white;
     border: 2px solid #2d2d2d;
     border-radius: 225px 15px 255px 15px / 15px 255px 15px 225px;
-    box-shadow: 6px 6px 0px 0px #2d2d2d;
-    padding: 2rem 1.5rem;
-    width: 280px;
+    box-shadow: 8px 8px 0px 0px #2d2d2d;
+    padding: 3rem 2.5rem;
+    width: 340px;
     position: relative;
     transform: rotate(-0.5deg);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.step-card:hover {
+    transform: rotate(-0.5deg) translateY(-4px);
+    box-shadow: 12px 12px 0px 0px #2d2d2d;
 }
 
 .step-card:nth-child(2) {
     transform: rotate(0.8deg);
 }
 
+.step-card:nth-child(2):hover {
+    transform: rotate(0.8deg) translateY(-4px);
+    box-shadow: 12px 12px 0px 0px #2d2d2d;
+}
+
 .step-card:nth-child(3) {
     transform: rotate(-0.3deg);
 }
 
+.step-card:nth-child(3):hover {
+    transform: rotate(-0.3deg) translateY(-4px);
+    box-shadow: 12px 12px 0px 0px #2d2d2d;
+}
+
 .step-num {
     font-family: 'Kalam', cursive;
-    font-size: 3rem;
+    font-size: 5rem;
     font-weight: 700;
     color: #e5e0d8;
     line-height: 1;
     display: block;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
 }
 
 .step-heading {
     font-family: 'Kalam', cursive;
     font-weight: 700;
-    font-size: 1.2rem;
-    margin-bottom: 0.75rem;
+    font-size: 1.6rem;
+    margin-bottom: 1rem;
 }
 
 .step-body {
-    font-size: 0.95rem;
-    line-height: 1.6;
+    font-size: 1.05rem;
+    line-height: 1.75;
     color: #555;
 }
 
@@ -179,7 +202,7 @@ body {
     gap: 2rem;
     flex-wrap: wrap;
     justify-content: center;
-    max-width: 900;
+    max-width: 900px;
     margin: 0 auto;
 }
 
@@ -578,7 +601,7 @@ body {
     transition: border 0.1s;
 }
 
-.test-color.active {
+.tool-color.active {
     border-color: #2d2d2d;
     box-shadow: 0 0 0 2px #2d2d2d44;
 }
@@ -591,7 +614,7 @@ body {
     background: #fff9c4;
     border: 2px solid #2d2d2d;
     border-radius: 12px;
-    max-width: 400;
+    max-width: 400px;
     min-height: 48px;
     flex-wrap: wrap;
 }
@@ -618,7 +641,7 @@ body {
 }
 
 .glyph-section-title {
-    font-family: 'Kalem' cursive;
+    font-family: 'Kalam' cursive;
     font-size: 1.5rem;
     font-weight: 700;
     margin-bottom: 0.4rem;
@@ -871,4 +894,284 @@ body {
     margin-bottom: 0.25rem;
     font-family: 'Kalam', cursive;
     font-size: 1rem;
+}
+
+.container-900 {
+    max-width: 1100px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.section-left {
+    text-align: left;
+}
+
+.feature-icon i {
+    font-size: 1.4rem;
+}
+
+.way-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.hero-demo {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.demo-card {
+    background: #fff;
+    border: 3px solid #2d2d2d;
+    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+    box-shadow: 8px 8px 0 #2d2d2d;
+    padding: 1.25rem 1.4rem;
+    width: min(340px, 88vw);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.demo-label {
+    font-family: 'Kalam', cursive;
+    font-size: 0.85rem;
+    color: #999;
+    align-self: flex-start;
+}
+
+.demo-canvas-wrap {
+    width: 100%;
+    aspect-ratio: unset;
+    height: 200px;
+    background: #fdfbf7;
+    border: 2px solid #e5e0d8;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+#demoCanvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.demo-char-label {
+    font-family: 'Kalam', cursive;
+    font-weight: 700;
+}
+
+.demo-char-label span {
+    color: #ff4d4d;
+}
+
+.demo-strip {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    justify-content: center;
+    min-height: 30px;
+}
+
+.demo-strip-char {
+    width: 26px;
+    height: 26px;
+    border: 1px solid #e5e0d5;
+    border-color: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: scale(.6);
+    transition: all .3s ease; 
+}
+
+.demo-strip-char.visible {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.hero {
+    padding: 0 4rem;
+    min-height: calc(100vh - 64px);
+    display: flex;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.hero-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4rem;
+    width: 100%;
+}
+
+.hero-text {
+    flex: 1;
+    min-width: 0;
+}
+
+.features-section {
+    padding: 6rem 4rem;
+    background: #fff9c4;
+    border-top: 2px solid #2d2d2d;
+    border-bottom: 2px solid #2d2d2d;
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.feature-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.feature-icon {
+    width: 52px;
+    height: 52px;
+    background: white;
+    border: 2px solid #2d2d2d;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 3px 3px 0 #2d2d2d;
+    margin-bottom: 0.5rem;
+}
+
+.feature-title {
+    font-family: 'Kalam', cursive;
+    font-weight: 700;
+    font-size: 1.2rem;
+}
+
+.feature-body {
+    font-size: 1rem;
+    color: #555;
+    line-height: 1.7;
+}
+
+.ways-section {
+    padding: 6rem 4rem;
+    max-width: 100%;
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: #fff9c4;
+    border-top: 2px solid #2d2d2d;
+    border-bottom: 2px solid #2d2d2d;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.ways-cards {
+    display: flex;
+    gap: 2.5rem;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.way-card {
+    flex: 1;
+    min-width: 300px;
+    background: white;
+    border: 2px solid #2d2d2d;
+    border-radius: 225px 15px 255px 15px / 15px 255px 15px 225px;
+    box-shadow: 6px 6px 0 #2d2d2d;
+    padding: 3rem 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.way-title {
+    font-family: 'Kalam', cursive;
+    font-weight: 700;
+    font-size: 1.6rem;
+}
+
+.way-body {
+    font-size: 1rem;
+    color: #555;
+    line-height: 1.7;
+    flex: 1;
+}
+
+.way-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.8rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    border: 2px solid #e5e0d8;
+    width: fit-content;
+}
+
+.way-badge.digital {
+    background: #e8f0fb;
+    color: #2d5da1;
+    border-color: #2d5da1;
+}
+
+.way-badge.paper {
+    background: #fff9c4;
+    color: #8a7a00;
+    border-color: #e5d800;
+}
+
+@media (max-width: 700px) {
+    .hero {
+        padding: 3rem 1.5rem;
+        min-height: unset;
+    }
+    .hero-title { 
+        font-size: 2.4rem;
+    }
+    .hero-inner { 
+        flex-direction: 
+        column; gap: 2rem;
+    }
+    .hero-demo { 
+        width: 100%; 
+        display: flex; 
+        justify-content: center; 
+    }
+    .features-section { 
+        padding: 4rem 1.5rem; 
+        min-height: unset; 
+    }
+    .how-section { 
+        padding: 4rem 1.5rem; 
+        min-height: unset; 
+    }
+    .ways-section { 
+        padding: 4rem 1.5rem; 
+        min-height: unset; 
+    }
+    .features-grid { 
+        grid-template-columns: 1fr 1fr; 
+    }
 }

@@ -234,3 +234,131 @@ if (drawCanvas) {
         }
     });
 }
+
+(function () {
+    const canvas = document.getElementById('demoCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const charLabel = document.getElementById('demoCharLabel');
+    const strip = document.getElementById('demoStrip');
+
+    const W = 240, H = 160;
+    canvas.width = W;
+    canvas.height = H;
+
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    //AI GENERATED :3 IDK THIS STUFF HEH BUT IT LOOKS COOL
+    const letters = [
+        { char: 'A', strokes: [
+            [[0.25,0.82],[0.38,0.55],[0.5,0.15],[0.62,0.55],[0.75,0.82]],
+            [[0.35,0.57],[0.65,0.57]]
+        ]},
+        { char: 'B', strokes: [
+            [[0.3,0.14],[0.3,0.5],[0.3,0.86]],
+            [[0.3,0.14],[0.48,0.15],[0.62,0.2],[0.65,0.32],[0.62,0.44],[0.48,0.5],[0.3,0.5]],
+            [[0.3,0.5],[0.5,0.51],[0.65,0.58],[0.68,0.7],[0.64,0.8],[0.5,0.86],[0.3,0.86]]
+        ]},
+        { char: 'H', strokes: [
+            [[0.27,0.14],[0.27,0.5],[0.27,0.86]],
+            [[0.73,0.14],[0.73,0.5],[0.73,0.86]],
+            [[0.27,0.5],[0.5,0.5],[0.73,0.5]]
+        ]},
+        { char: 'R', strokes: [
+            [[0.3,0.14],[0.3,0.5],[0.3,0.86]],
+            [[0.3,0.14],[0.5,0.15],[0.65,0.22],[0.66,0.36],[0.58,0.46],[0.45,0.5],[0.3,0.5]],
+            [[0.45,0.5],[0.55,0.62],[0.65,0.74],[0.72,0.86]]
+        ]},
+        { char: 'S', strokes: [
+            [[0.68,0.22],[0.6,0.14],[0.5,0.12],[0.38,0.14],[0.3,0.24],
+             [0.32,0.34],[0.44,0.42],[0.56,0.5],[0.68,0.58],
+             [0.7,0.68],[0.62,0.8],[0.5,0.86],[0.36,0.84],[0.28,0.75]]
+        ]}
+    ];
+
+    let li = 0, si = 0, pi = 0;
+    let prevX = null, prevY = null, prevDX = 0, prevDY = 0;
+    let drawn = [];
+
+    function jitter(val, amt) {
+        return val + (Math.random() - 0.5) * amt;
+    }
+
+    function addToStrip(char) {
+        drawn.push(char);
+        strip.innerHTML = '';
+        drawn.slice(-8).forEach(c => {
+            const el = document.createElement('div');
+            el.className = 'demo-strip-char';
+            el.textContent = c;
+            strip.appendChild(el);
+            requestAnimationFrame(() => el.classList.add('visible'));
+        });
+    }
+
+    function drawSegment(x1, y1, x2, y2, dx, dy) {
+        const cp1x = x1 + dx * 0.45 + jitter(0, 2.5);
+        const cp1y = y1 + dy * 0.45 + jitter(0, 2);
+        const cp2x = x2 - (x2 - x1) * 0.25 + jitter(0, 2.5);
+        const cp2y = y2 - (y2 - y1) * 0.25 + jitter(0, 2);
+
+        ctx.lineWidth = 5.5 + Math.random() * 2;
+        ctx.strokeStyle = '#2d2d2d';
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x2, y2);
+        ctx.stroke();
+    }
+
+    function drawNextPoint() {
+        const letter = letters[li];
+        const stroke = letter.strokes[si];
+
+        if (pi === 0) {
+            prevX = jitter(stroke[0][0] * W, 1);
+            prevY = jitter(stroke[0][1] * H, 1);
+            prevDX = 0;
+            prevDY = 0;
+            pi++;
+            return setTimeout(drawNextPoint, 22);
+        }
+
+        if (pi < stroke.length) {
+            const wx = jitter(stroke[pi][0] * W, 1.5);
+            const wy = jitter(stroke[pi][1] * H, 1.5);
+            const dx = wx - prevX;
+            const dy = wy - prevY;
+
+            drawSegment(prevX, prevY, wx, wy, prevDX, prevDY);
+
+            prevDX = dx;
+            prevDY = dy;
+            prevX = wx;
+            prevY = wy;
+            pi++;
+
+            return setTimeout(drawNextPoint, 15 + Math.random() * 22);
+        }
+        si++;
+        pi = 0;
+        prevX = null; prevY = null;
+        prevDX = 0; prevDY = 0;
+
+        if (si < letter.strokes.length) {
+            return setTimeout(drawNextPoint, 360);
+        }
+        addToStrip(letter.char);
+        setTimeout(() => {
+            li = (li + 1) % letters.length;
+            si = 0; pi = 0;
+            prevX = null; prevY = null;
+            prevDX = 0; prevDY = 0;
+            ctx.clearRect(0, 0, W, H);
+            charLabel.textContent = letters[li].char;
+            drawNextPoint();
+        }, 850);
+    }
+
+    charLabel.textContent = letters[0].char;
+    setTimeout(drawNextPoint, 400);
+})();

@@ -26,32 +26,85 @@
             }
         </script>
         <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+        <link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
         <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Patrick+Hand&display=swap" rel="stylesheet">
     </head>
     <body>
         <nav class="nav-bar">
             <a href="/" class="nav-logo">Letterset</a>
-            <a href="/upload" class="btn-primary">Draw my font</a>
+            <div style="display: flex; gap: 0.6rem; align-items: center;">
+                <a href="/upload" class="btn-secondary" style="font-size: 0.85rem; padding: 0.35rem 0.8rem;">Upload  sheet</a>
+                <a href="/draw" class="btn-primary">Draw my font</a>
+            </div>
         </nav>
         <section class="hero">
-            <div class="hero-text">
-                <h1 class="hero-title">Turn your handwriting<br>into a real font.</h1>
-                <p class="hero-sub">Draw each letter with your mouse or stylus.<br>Get a real .ttf font you can install anywhere.</p>
-                <div class="hero-buttons">
-                    <a href="/draw" class="btn-primary">Draw my font</a>
-                    <a href="#how" class="btn-secondary">See how it works</a>
-                    <p style="font-size:0.85rem; color:#888; margin-top:0.25rem; width:100%;">
-                        Prefer pen and paper? <a href="/upload" style="color:#2d5da1; border-bottom:1px dashed #2d5da1;">Upload a photo sheet instead →</a>
-                    </p>
+            <div class="hero-inner">
+                <div class="hero-text">
+                    <div style="display: inline-block; background: #fff9c4; border: 2px solid #e5e0d8; border-radius: 20px; padding: 0.85rem; font-size: 0.8rem; color: #555; margin-bottom: 1rem;">Fully Opensourced and Free!!</div>
+                    <h1 class="hero-title">Turn your handwriting<br>into a real font.</h1>
+                    <p class="hero-sub">Draw each character with your mouse or stylus or fill out a printed sheet by hand. Get a real <strong>.ttf</strong> file you can install on any computer, forever.</p>
+                    <div class="hero-buttons">
+                        <a href="/draw" class="btn-primary" style="font-size:1.05rem;padding:0.6rem 1.5rem;">
+                            <i class="fas fa-pencil-alt"></i>  Draw my font</a>
+                        <a href="#how" class="btn-secondary"><i class="fas fa-circle-info"></i>  See how it works</a>
+                    </div>
+                    <p style="font-size: 0.82rem; color: #aaa; margin-top: 1rem;">Prefer pen and paper? <a href="/upload" style="color: #2d5da1; border-bottom: 1px dashed #2d5da1;">Upload a photo sheet -></a></p>
+                </div>
+                <div class="hero-demo">
+                    <div class="demo-card">
+                        <span class="demo-label">Live Preview</span>
+                        <div class="demo-canvas-wrap">
+                            <canvas id="demoCanvas" width="260" height="260"></canvas>
+                        </div>
+                        <div class="demo-char-label">Drawing: <span id="demoCharLabel">A</span></div>
+                        <div class="demo-strip" id="demoStrip"></div>
+                    </div>
                 </div>
             </div>
-            <div class="hero-arrow">
-                <svg width="120" height="80" viewBox="0 0 120 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M10 20 C 30 10, 80 10, 100 40 C 110 55, 105 65, 95 68" stroke="#2d2d2d" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-                    <path d="M95 68 L 88 58 M 95 68 L 105 60" stroke="#2d2d2d" stroke-width="2.5" stroke-linecap="round"/>
-                </svg>
-            </div>
         </section>
+    <section class="features-section">
+        <div class="container-900">
+            <h2 class="how-title section-left">Why Letterset?</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-pen-nib"></i>
+                    </div>
+                    <div class="feature-title">Your handwriting, exactly</div>
+                    <div class="feature-body">
+                        Every stroke and curve is preserved so the font feels like your own handwriting.
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <div class="feature-title">Ready in minutes</div>
+                    <div class="feature-body">
+                        Draw your characters and generate a usable font file in just a few minutes.
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-font"></i>
+                    </div>
+                    <div class="feature-title">Real font file</div>
+                    <div class="feature-body">
+                        Works in Word, Photoshop, Canva, Figma and anywhere fonts can be installed.
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-halved"></i>
+                    </div>
+                    <div class="feature-title">Private</div>
+                    <div class="feature-body">
+                        Nothing is stored beyond your session. Your font remains yours.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
         <section class="how-section" id="how">
             <h2 class="how-title">How it works</h2>
             <div class="how-cards">
@@ -72,52 +125,37 @@
                 </div>
             </div>
         </section>
-        <!-- <section class="tips-section">
-            <h2 class="how-title">Tips for a good photo</h2>
-            <div class="tips-grid">
-                <div class="tip-item">
-                    <svg class="tip-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="24" cy="24" r="8" stroke="#2d2d2d" stroke-width="2.5" stroke-linecap="round"/>
-                        <line x1="24" y1="4" x2="24" y2="10" stroke="#2d2d2d" stroke-width="2.5" stroke-linecap="round"/>
-                        <line x1="24" y1="38" x2="24" y2="44" stroke="#2d2d2d" stroke-width="2.5" stroke-linecap="round"/>
-                        <line x1="4" y1="24" x2="10" y2="24" stroke="#2d2d2d" stroke-width="2.5" stroke-linecap="round"/>
-                        <line x1="38" y1="24" x2="44" y2="24" stroke="#2d2d2d" stroke-width="2.5" stroke-linecap="round"/>
-                        <line x1="8" y1="8" x2="13" y2="13" stroke="#2d2d2d" stroke-width="2.5" stroke-linecap="round"/>
-                        <line x1="35" y1="35" x2="40" y2="40" stroke="#2d2d2d" stroke-width="2.5" stroke-linecap="round"/>
-                        <line x1="40" y1="8" x2="35" y2="13" stroke="#2d2d2d" stroke-width="2.5" stroke-linecap="round"/>
-                        <line x1="13" y1="35" x2="8" y2="40" stroke="#2d2d2d" stroke-width="2.5" stroke-linecap="round"/>
-                    </svg>
-                    <p><strong>Good Lighting</strong> natural daylight works best. Avoid shadows across the sheet.</p>
-                </div>
-                <div class="tip-item">
-                    <svg class="tip-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="10" y="16" width="28" height="20" rx="3" stroke="#2d2d2d" stroke-width="2.5"/>
-                        <rect x="18" y="10" width="10" height="7" rx="2" stroke="#2d2d2d" stroke-width="2.5"/>
-                        <circle cx="24" cy="26" r="5" stroke="#2d2d2d" stroke-width="2.5"/>
-                        <line x1="24" y1="4" x2="24" y2="9" stroke="#2d2d2d" stroke-width="2.5" stroke-linecap="round"/>
-                        <polyline points="20,6 24,10 28,6" stroke="#2d2d2d" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                    </svg>
-                    <p><strong>Shoot straight down</strong> hold the camera directly above the sheet and not at an angle.</p>
-                </div>
-                <div class="tip-item">
-                    <svg class="tip-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 36 L30 12 L38 18 L18 40 Z" stroke="#2d2d2d" stroke-width="2.5" stroke-linejoin="round"/>
-                        <path d="M12 36 L8 42 L16 40 Z" stroke="#2d2d2d" stroke-width="2.5" stroke-linejoin="round"/>
-                        <line x1="27" y1="14" x2="35" y2="20" stroke="#2d2d2d" stroke-width="2.5" stroke-linecap="round"/>
-                    </svg>
-                    <p><strong>Dark pen only</strong> ball point or felt tip. Pencil and light ink won't vectorize cleanly.</p>
-                </div>
-                <div class="tip-item">
-                    <svg class="tip-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="10" y="8" width="28" height="34" rx="2" stroke="#2d2d2d" stroke-width="2.5"/>
-                        <line x1="16" y1="18" x2="32" y2="18" stroke="#2d2d2d" stroke-width="2.5" stroke-linecap="round"/>
-                        <line x1="16" y1="24" x2="32" y2="24" stroke="#2d2d2d" stroke-width="2.5" stroke-linecap="round"/>
-                        <line x1="16" y1="30" x2="26" y2="30" stroke="#2d2d2d" stroke-width="2.5" stroke-linecap="round"/>
-                    </svg>
-                    <p><strong>Flat surface</strong> no wrinkles or folds. A crease through a letter box will ruit that glyph.</p>
-                </div>
+    <section class="ways-section">
+        <h2 class="how-title section-left">Two ways to make your font</h2>
+        <div class="ways-cards">
+            <div class="way-card">
+                <span class="way-badge digital">
+                    <i class="fas fa-tablet-screen-button"></i>
+                    Digital
+                </span>
+                <h3 class="way-title">Draw on screen</h3>
+                <p class="way-body">
+                    Use your mouse, trackpad or stylus directly in the browser.
+                </p>
+                <a href="/draw" class="btn-primary">
+                    Start drawing
+                </a>
             </div>
-        </section> -->
+            <div class="way-card">
+                <span class="way-badge paper">
+                    <i class="fas fa-file-lines"></i>
+                    Paper
+                </span>
+                <h3 class="way-title">Fill a printed sheet</h3>
+                <p class="way-body">
+                    Download the template, write your characters and upload a photo.
+                </p>
+                <a href="/upload" class="btn-secondary">
+                    Upload sheet
+                </a>
+            </div>
+        </div>
+    </section>
         <footer class="footer">
             <div class="footer-inner">
                 <span class="nav-logo">Letterset</span>
@@ -130,5 +168,6 @@
                 </a>
             </div>
         </footer>
+        <script src="{{ url_for('static', filename='js/script.js') }}"></script>
     </body>
 </html>
