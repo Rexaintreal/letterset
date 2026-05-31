@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-       <meta charset="UTF-8">
-       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-       <title>Preview - Letterset</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Preview - Letterset</title>
         <script src="https://cdn.tailwindcss.com"></script>
         <script>
             tailwind.config = {
@@ -27,290 +27,103 @@
         </script>
         <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
         <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Patrick+Hand&display=swap" rel="stylesheet">
-        <style>
-            @font-face {
-                font-family: 'UserFont';
-                src: url('/download/{{ session_id }}') format('truetype');
-            }
-            .preview-text {
-                font-family: 'UserFont', 'Patrick Hand', cursive;
-            }
-        </style>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     </head>
-    <body>
-        <nav class="nav-bar">
+    <body style="overflow:hidden; height:100vh; display:flex; flex-direction:column;">
+        <nav class="nav-bar" style="flex-shrink:0;">
             <a href="/" class="nav-logo">Letterset</a>
-            <a href="/draw" class="btn-secondary">Draw another</a>
+            <div style="display:flex; gap:0.6rem; align-items:center;">
+                <a href="/draw" class="btn-secondary">Draw another</a>
+                <a href="/" class="btn-secondary">Home</a>
+            </div>
         </nav>
-        <main class="preview-main">
-            <div class="preview-card">
+        <div id="buildBanner" class="build-banner" style="flex-shrink:0;">
+            <span class="build-banner-spinner"></span>
+            <span id="buildBannerMsg">Building your font...</span>
+        </div>
+        <main style="display:flex; gap:1.5rem; padding:1.25rem 2rem; flex:1; min-height:0; box-sizing:border-box; align-items:stretch; overflow:hidden;">
+            <div style="display:flex; flex-direction:column; gap:1rem; flex:1.1; min-width:0; overflow-y:auto;">
                 <div class="preview-header">
-                    <h1 class="upload-title">Your font is ready.</h1>
-                    <p class="upload-sub">Give it a name, try it out, then download the .ttf file to own it!</p>
-                    <input type="text" id="fontName" placeholder="My Handwriting" maxlength="32" style="margin-top:0.75rem; width:100%; padding:0.5rem 0.75rem; font-family:'Patrick Hand',cursive; font-size:1rem; border:2px solid #2d2d2d; border-radius:8px; outline:none; background:#fdfbf7;">
-                </div>
-                <div>
-                    <div class="preset-row">
-                        <span style="font-size: 0.8rem; color: #aaa; align-self: center; margin-right: 0.25rem;">Try:</span>
-                        <button class="preset-btn" data-text="The quick brown fox jumps over the lazy dog.">Pangram</button>
-                        <button class="preset-btn" data-text="Pack my box with five dozen liquor jugs.">Alt pangram</button>
-                        <button class="preset-btn" data-text="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz">Alphabet</button>
-                        <button class="preset-btn" data-text="0123456789 .,!?()-_/">Numbers and Symbols</button>
-                        <button class="dark-toggle" id="darkToggle">Dark</button>
+                    <h1 class="upload-title" style="display:flex; align-items:center; gap:0.5rem; justify-content:center;"><i class="fas fa-check-circle" style="color:#4caf50; font-size:1.6rem;"></i> Your font is ready!</h1>
+                    <p class="upload-sub">Give it a name, try it out below, then download your <strong>.ttf</strong> file.</p>
+                    <div class="font-name-wrap">
+                        <label class="font-name-label" for="fontName">Font name</label>
+                        <input type="text" id="fontName" placeholder="My Handwriting" maxlength="32" class="font-name-input" autocomplete="off" spellcheck="false">
                     </div>
                 </div>
-                <div class="preview-box" id="previewBox">
+                <div class="preset-row">
+                    <span class="preset-row-label">Try:</span>
+                    <button class="preset-btn active" data-text="The quick brown fox jumps over the lazy dog.">Pangram</button>
+                    <button class="preset-btn" data-text="Pack my box with five dozen liquor jugs.">Alt pangram</button>
+                    <button class="preset-btn" data-text="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz">Alphabet</button>
+                    <button class="preset-btn" data-text="0123456789 .,!?()-_/">Numbers &amp; symbols</button>
+                    <button class="dark-toggle" id="darkToggle"><i class="fas fa-moon"></i> Dark</button>
+                </div>
+                <div class="preview-box" id="previewBox" style="flex:1; min-height:0; overflow:hidden;">
                     <div class="preview-text preview-display" id="previewDisplay" contenteditable="true" spellcheck="false">
                         The quick brown fox jumps over the lazy dog.
                     </div>
                 </div>
-                <div class="preview-size-row">
-                    <label class="preview-size-label">Size</label>
-                    <input type="range" min="24" max="120" value="64" id="sizeSlider" class="preview-slider">
-                    <span class="preview-size-val" id="sizeVal">64px</span>
+                <div class="preview-controls">
+                    <div class="preview-control-row">
+                        <label class="preview-control-label"><i class="fas fa-text-height"></i> Size</label>
+                        <input type="range" min="24" max="120" value="64" id="sizeSlider" class="preview-slider">
+                        <span class="preview-control-val" id="sizeVal">64px</span>
+                    </div>
+                    <div class="preview-control-row">
+                        <label class="preview-control-label"><i class="fas fa-arrows-left-right"></i> Spacing</label>
+                        <input type="range" min="-5" max="40" value="0" id="spacingSlider" class="preview-slider">
+                        <span class="preview-control-val" id="spacingVal">0px</span>
+                    </div>
+                    <div class="preview-control-row">
+                        <label class="preview-control-label"><i class="fas fa-arrows-up-down"></i> Line height</label>
+                        <input type="range" min="80" max="250" value="130" id="lineSlider" class="preview-slider">
+                        <span class="preview-control-val" id="lineVal">1.3</span>
+                    </div>
                 </div>
-                <div class="preview-spacing-row">
-                    <label class="preview-spacing-label">Spacing</label>
-                    <input type="range" min="-5" max="40" value="0" id="spacingSlider" class="preview-slider">
-                    <span class="preview-spacing-val" id="spacingVal">0px</span>
+                <div class="preview-actions" style="flex-shrink:0;">
+                    <button class="btn-primary preview-download" id="downloadBtn" disabled>
+                        <i class="fas fa-download"></i> Download .ttf
+                    </button>
+                    <p class="preview-note" id="statusMsg">Building your font...</p>
                 </div>
-                <div class="preview-spacing-row">
-                    <label class="preview-spacing-label">Line&nbsp;height</label>
-                    <input type="range" min="80" max="250" value="130" id="lineSlider" class="preview-slider">
-                    <span class="preview-spacing-val" id="lineVal">1.3</span>
+            </div>
+            <div style="flex:1; min-width:0; display:flex; flex-direction:column; gap:0.75rem; overflow:hidden;">
+                <div class="glyph-session-header" style="flex-shrink:0;">
+                    <div>
+                        <h2 class="glyph-section-title">Your Glyphs</h2>
+                        <p class="glyph-section-sub">Click any character to redraw it. Changes rebuild your font automatically.</p>
+                    </div>
+                    <span class="glyph-count-badge" id="glyphCountBadge"></span>
                 </div>
-                <div class="preview-actions">
-                    <button class="btn-primary preview-download" id="downloadBtn">Download .ttf</button>
-                    <p class="preview-note" id="statusMsg"></p>
+                <div class="glyph-gallery" id="glyphGallery" style="overflow-y:auto; flex:1;">
+                    <p class="glyph-loading">Loading glyphs...</p>
                 </div>
             </div>
         </main>
-        <section class="glyph-section">
-            <h2 class="glyph-section-title">Your Glyphs</h2>
-            <p class="glyph-section-sub">Click any character to redraw it. Changes rebuild your font automatically.</p>
-            <div class="glyph-gallery" id="glyphGallery">
-                <p style="color:#aaa; font-size: 0.9rem;">Loading glyphs...</p>
-            </div>
-        </section>
-        <div id="redrawModal" style="display: none;">
+        <div id="redrawModal" class="modal-root" aria-hidden="true">
             <div class="modal-backdrop" id="modalBackdrop"></div>
-            <div class="modal-card">
-                <p class="modal-title">Redraw: <span id="modalCharLabel">A</span></p>
-                <p class="modal-hint">Backspace = clear &nbsp;·&nbsp; Enter = save</p>
-                <div style="display: flex; gap: 0.75rem; align-items: center; margin-bottom: 0.25rem;">
-                    <span style="font-size:0.8rem; color: #aaa;">Brush</span>
-                    <input type="range" min="4" max="28" value="8" id="modalBrush" style="width: 120px; accent-color: #2d2d2d;">
-                    <span style="font-size: 0.8rem; color: #aaa;" id="modalBrushVal">8px</span>
+            <div class="modal-card" role="dialog" aria-modal="true">
+                <div class="modal-card-header">
+                    <p class="modal-title">Redraw: <span id="modalCharLabel">A</span></p>
+                    <button class="modal-close-btn" id="modalCancelBtn" aria-label="Close">x</button>
+                </div>
+                <p class="modal-hint">Backspace = clear &nbsp;·&nbsp; Enter = save &nbsp;·&nbsp; Esc = cancel</p>
+                <div class="modal-brush-row">
+                    <span class="tool-label">Brush</span>
+                    <input type="range" min="4" max="28" value="8" id="modalBrush" class="preview-slider" style="width:120px;">
+                    <span class="tool-label" id="modalBrushVal">8px</span>
                 </div>
                 <div class="modal-canvas-wrap">
                     <canvas id="redrawCanvas" width="300" height="300"></canvas>
                 </div>
                 <div class="modal-actions">
                     <button class="btn-secondary" id="modalClearBtn">Clear</button>
-                    <button class="btn-secondary" id="modalCancelBtn">Cancel</button>
-                    <button class="btn-primary" id="modalSaveBtn">Save & Rebuild -></button>
+                    <button class="btn-primary" id="modalSaveBtn">Save &amp; Rebuild</button>
                 </div>
             </div>
         </div>
-        <script>
-            const SESSION_ID = "{{ session_id }}";
-            const msg = document.getElementById('statusMsg');
-            const btn = document.getElementById('downloadBtn');
-
-            function buildFont(name) {
-                return fetch(`/build/${SESSION_ID}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name: name || 'MyFont' })
-                }).then(r => r.json());
-            }
-            function reloadUserFont() {
-                const style = document.createElement('style');
-                style.textContent = `@font-face { font-family: 'UserFont'; src: url('/download/${SESSION_ID}?t=${Date.now()}') format('truetype'); }`
-                document.head.appendChild(style);
-            }
-
-            window.addEventListener('DOMContentLoaded', () => {
-                btn.style.opacity = '0.5';
-                btn.disabled = true;
-                msg.textContent = 'Building your font...';
-                buildFont('MyFont').then(data => {
-                    if (data.error) {msg.textContent = 'Build failed: ' + data.error; return; }
-                    msg.textContent = 'Font ready!';
-                    btn.style.opacity = '1';
-                    btn.disabled = false;
-                    reloadUserFont();
-                }).catch(() => { msg.textContent = 'Something went wrong.'; });
-
-                loadGlyphGallery();
-            });
-
-            btn.addEventListener('click', () => {
-                const name = document.getElementById('fontName').value.trim() || 'MyFont';
-                msg.textContent = 'Saving...';
-                buildFont(name).then(() => { window.location.href = `/download/${SESSION_ID}`});
-            });
-
-            document.getElementById('sizeSlider').addEventListener('input', function() {
-                document.getElementById('previewDisplay').style.fontSize = this.value + 'px';
-                document.getElementById('sizeVal').textContent = this.value + 'px';
-            });
-            document.getElementById('spacingSlider').addEventListener('input', function() {
-                document.getElementById('previewDisplay').style.letterSpacing = this.value + 'px';
-                document.getElementById('spacingVal').textContent = this.value + 'px';
-            });
-            document.getElementById('lineSlider').addEventListener('input', function() {
-                const val = (this.value / 100).toFixed(1);
-                document.getElementById('previewDisplay').style.lineHeight = val;
-                document.getElementById('lineVal').textContent = val;
-            });
-            document.querySelectorAll('.preset-btn').forEach(b => {
-                b.addEventListener('click', () => {
-                    document.getElementById('previewDisplay').textContent = b.dataset.text;
-                });
-            });
-
-            const darkToggle = document.getElementById('darkToggle');
-            const previewBox = document.getElementById('previewBox');
-            let dark = false;
-            darkToggle.addEventListener('click', () => {
-                dark = !dark;
-                previewBox.classList.toggle('dark-mode', dark);
-                darkToggle.textContent = dark ? 'Light' : 'Dark';
-            });
-
-
-            function loadGlyphGallery() {
-                fetch(`/glyphs/${SESSION_ID}`).then(r => r.json()).then(data => {
-                    const gallery = document.getElementById('glyphGallery');
-                    gallery.innerHTML = '';
-                    if (!data.glyphs || data.glyphs.length === 0) {
-                        gallery.innerHTML = '<p style="color:#aaa; font-size:0.9rem;">No glyphs found.</p>';
-                        return;
-                    }
-                    data.glyphs.forEach(g => {
-                        const tile = document.createElement('div');
-                        tile.className = 'glyph-tile';
-                        tile.title = `CLick to redraw "${g.char}"`;
-                        tile.innerHTML = `<img src="/glyph_img/${SESSION_ID}/${g.code}?t=${Date.now()}" alt="${g.char}" id="glyph-img-${g.code}">
-                        <span>${g.char === '<' ? '&lt;' : g.char === '>' ? '&gt;' : g.char}</span>`;
-                        tile.addEventListener('click', () => openRedrawModal(g.char, g.code));
-                        gallery.appendChild(tile);
-                    });
-                });
-            }
-
-            let modalChar = null;
-            let modalCode = null;
-            let mDrawing = false;
-            const modal = document.getElementById('redrawModal');
-            const mCanvas = document.getElementById('redrawCanvas');
-            const mCtx = mCanvas.getContext('2d')
-            const mCharLabel = document.getElementById('modalCharLabel');
-            const mBrush = document.getElementById('modalBrush');
-            const mBrushVal = document.getElementById('modalBrushVal');
-
-            mCtx.strokeStyle = '#2d2d2d';
-            mCtx.lineWidth = 8;
-            mCtx.lineCap = 'round';
-            mCtx.lineJoin = 'round';
-
-            mBrush.addEventListener('input', function() {
-                mCtx.lineWidth = parseInt(this.value);
-                mBrushVal.textContent = this.value + 'px';
-            });
-
-            function mGetPos(e) {
-                const r = mCanvas.getBoundingClientRect();
-                const src= e.touches ? e.touches[0] : e;
-                return { x: src.clientX - r.left, y: src.clientY - r.top }; 
-            }
-
-            mCanvas.addEventListener('mousedown', e=> {
-                mDrawing = true; mCtx.beginPath(); const p = mGetPos(e); mCtx.moveTo(p.x, p.y); });
-                mCanvas.addEventListener('mousemove', e => { if (!mDrawing) return; const p = mGetPos(e); mCtx.lineTo(p.x, p.y); mCtx.stroke(); });
-                mCanvas.addEventListener('mouseup', () => mDrawing = false);
-                mCanvas.addEventListener('mouseleave',() => mDrawing = false);
-                mCanvas.addEventListener('touchstart', e => { e.preventDefault(); mDrawing = true; mCtx.beginPath(); const p = mGetPos(e); mCtx.moveTo(p.x, p.y); }, { passive: false });
-                mCanvas.addEventListener('touchmove', e => { e.preventDefault(); if (!mDrawing) return; const p = mGetPos(e); mCtx.lineTo(p.x, p.y); mCtx.stroke(); }, { passive: false });
-                mCanvas.addEventListener('touchend', () => mDrawing = false);
-
-                document.getElementById('modalClearBtn').addEventListener('click', () => {
-                    mCtx.clearRect(0, 0, mCanvas.width, mCanvas.height);
-                });
-
-                document.getElementById('modalCancelBtn').addEventListener('click', closeModal);
-                document.getElementById('modalBackdrop').addEventListener('click', closeModal);
-
-                document.getElementById('modalSaveBtn').addEventListener('click', () => {
-                    const pixels = mCtx.getImageData(0, 0, mCanvas.width, mCanvas.height).data;
-                    let hasInk = false;
-                    for (let i = 3; i < pixels.length; i +=4) {
-                        if(pixels[i] >10 ) {
-                            hasInk = true;
-                            break;
-                        }
-                    }
-                    if (!hasInk) return;
-
-                    const saveBtn = document.getElementById('modalSaveBtn');
-                    saveBtn.textContent = 'Saving...';
-                    saveBtn.disabled = true;
-
-                    const dataURL = mCanvas.toDataURL('image/png');
-                    fetch('/save_glyph', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ session_id: SESSION_ID, char: modalChar, image: dataURL
-                        })
-                    }).then(() => {
-                        const thumb = document.getElementById(`glyph-img-${modalCode}`);
-                        if (thumb) thumb.src = dataURL;
-                msg.textContent = 'Rebuilding font...';
-                const name = document.getElementById('fontName').value.trim() || 'MyFont';
-                return buildFont(name);
-            }).then(data => {
-                if (data && !data.error) {
-                    reloadUserFont();
-                    msg.textContent = 'Font updated!';
-                    setTimeout(() => { msg.textContent = ''; }, 3000);
-                }
-                closeModal();
-                saveBtn.textContent = 'Save & Rebuild →';
-                saveBtn.disabled = false;
-            });
-        });
- 
-        document.addEventListener('keydown', e => {
-            if (modal.style.display === 'none') return;
-            if (e.key === 'Escape') closeModal();
-            if (e.key === 'Enter') document.getElementById('modalSaveBtn').click();
-            if (e.key === 'Backspace' && e.target === document.body) {
-                e.preventDefault();
-                mCtx.clearRect(0, 0, mCanvas.width, mCanvas.height);
-            }
-        });
- 
-        function openRedrawModal(char, code) {
-            modalChar = char;
-            modalCode = code;
-            mCharLabel.textContent = char;
-            mCtx.clearRect(0, 0, mCanvas.width, mCanvas.height);
-            const img = new Image();
-            img.crossOrigin = 'anonymous';
-            img.onload = () => {
-                mCtx.drawImage(img, 0, 0, mCanvas.width, mCanvas.height);
-            };
-            img.src = `/glyph_img/${SESSION_ID}/${code}?t=${Date.now()}`;
-            modal.style.display = 'block';
-            document.body.style.overflow = 'hidden';
-        }
- 
-        function closeModal() {
-            modal.style.display = 'none';
-            document.body.style.overflow = '';
-            mCtx.clearRect(0, 0, mCanvas.width, mCanvas.height);
-        }
-        </script>
+        <script>const SESSION_ID = "{{ session_id }}";</script>
+        <script src="{{ url_for('static', filename='js/script.js') }}"></script>
     </body>
 </html>

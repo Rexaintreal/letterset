@@ -38,7 +38,6 @@ if (dropZone) {
         if (e.target.closest('label') || e.target === fileInput) return;
         fileInput.click();
     });
-
     dropZone.addEventListener('dragover', e => {
         e.preventDefault();
         dropZone.classList.add('dragover');
@@ -78,9 +77,7 @@ if (dropZone) {
             currentStep++;
 
             if (currentStep === stepIds.length - 1) {
-                if (fetchDone) {
-                    activateStep(currentStep);
-                }
+                if (fetchDone) activateStep(currentStep);
                 return;
             }
 
@@ -98,9 +95,7 @@ if (dropZone) {
                 document.getElementById(id).className =
                     idx < stepIds.length - 1 ? 'processing-step done' : 'processing-step active';
             });
-        }).catch(() => {
-            stopped = true;
-        });
+        }).catch(() => { stopped = true; });
     }
 
     submitBtn.addEventListener('click', () => {
@@ -111,14 +106,10 @@ if (dropZone) {
         formData.append('sheet', file);
         overlay.classList.add('active');
         document.getElementById('errorBanner').classList.remove('visible');
-
         const fetchPromise = fetch('/upload', { method: 'POST', body: formData });
         animateSteps(fetchPromise);
-
         fetchPromise
-            .then(res => {
-                setTimeout(() => { window.location.href = res.url; }, 600);
-            })
+            .then(res => { setTimeout(() => { window.location.href = res.url; }, 600); })
             .catch(() => {
                 resetUploadState();
                 document.getElementById('errorBanner').classList.add('visible');
@@ -162,18 +153,16 @@ if (drawCanvas) {
     setTimeout(resizeCanvas, 50);
     function isCanvasEmpty() {
         const pixels = ctx.getImageData(0, 0, drawCanvas.width, drawCanvas.height).data;
-        for (let i = 3; i < pixels.length; i+=4) {
+        for (let i = 3; i < pixels.length; i += 4) {
             if (pixels[i] > 10) return false;
         }
         return true;
     }
     function updateProgress() {
-        const pct = Math.round((current/chars.length) *100);
         document.getElementById('drawProgress').textContent = (current + 1) + ' of ' + chars.length;
         const fill = document.getElementById('progressBarFill');
-        if (fill) fill.style.width = pct + '%';
+        if (fill) fill.style.width = Math.round((current / chars.length) * 100) + '%';
     }
-
     function updateStrip() {
         const container = document.getElementById('previewChars');
         container.innerHTML = '';
@@ -187,7 +176,6 @@ if (drawCanvas) {
             container.appendChild(img);
         }
     }
-
     function restoreDrawing(index) {
         ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
         const saved = drawings[index];
@@ -197,11 +185,9 @@ if (drawCanvas) {
             img.src = saved;
         }
     }
-
     function saveCurrentDrawing() {
         if (!isCanvasEmpty()) drawings[current] = drawCanvas.toDataURL('image/png');
     }
-    
     function goToChar(index) {
         current = index;
         document.getElementById('currentChar').textContent = chars[current];
@@ -209,7 +195,6 @@ if (drawCanvas) {
         restoreDrawing(current);
         updateStrip();
     }
-
     function getPos(e) {
         const r = drawCanvas.getBoundingClientRect();
         const src = e.touches ? e.touches[0] : e;
@@ -227,13 +212,11 @@ if (drawCanvas) {
     document.getElementById('clearBtn').addEventListener('click', () => {
         ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
     });
-
     document.getElementById('backBtn').addEventListener('click', () => {
         if (current === 0) return;
         saveCurrentDrawing();
         goToChar(current - 1);
     });
-
     document.getElementById('skipBtn').addEventListener('click', () => {
         skipped.add(current);
         drawings[current] = null;
@@ -255,7 +238,6 @@ if (drawCanvas) {
         if (next >= chars.length) window.location.href = '/preview/' + SESSION_ID;
         else goToChar(next);
     });
-
     document.addEventListener('keydown', e => {
         if (e.key === 'Enter') {
             document.getElementById('nextBtn').click();
@@ -282,7 +264,7 @@ if (drawCanvas) {
 
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
-    //AI GENERATED :3 IDK THIS STUFF HEH BUT IT LOOKS COOL
+    // AI GENERATED :3 IDK THIS STUFF HEH BUT IT LOOKS COOL
     const letters = [
         { char: 'A', strokes: [
             [[0.25,0.82],[0.38,0.55],[0.5,0.15],[0.62,0.55],[0.75,0.82]],
@@ -314,9 +296,7 @@ if (drawCanvas) {
     let prevX = null, prevY = null, prevDX = 0, prevDY = 0;
     let drawn = [];
 
-    function jitter(val, amt) {
-        return val + (Math.random() - 0.5) * amt;
-    }
+    function jitter(val, amt) { return val + (Math.random() - 0.5) * amt; }
 
     function addToStrip(char) {
         drawn.push(char);
@@ -335,7 +315,6 @@ if (drawCanvas) {
         const cp1y = y1 + dy * 0.45 + jitter(0, 2);
         const cp2x = x2 - (x2 - x1) * 0.25 + jitter(0, 2.5);
         const cp2y = y2 - (y2 - y1) * 0.25 + jitter(0, 2);
-
         ctx.lineWidth = 5.5 + Math.random() * 2;
         ctx.strokeStyle = '#2d2d2d';
         ctx.beginPath();
@@ -347,46 +326,32 @@ if (drawCanvas) {
     function drawNextPoint() {
         const letter = letters[li];
         const stroke = letter.strokes[si];
-
         if (pi === 0) {
             prevX = jitter(stroke[0][0] * W, 1);
             prevY = jitter(stroke[0][1] * H, 1);
-            prevDX = 0;
-            prevDY = 0;
+            prevDX = 0; prevDY = 0;
             pi++;
             return setTimeout(drawNextPoint, 22);
         }
-
         if (pi < stroke.length) {
             const wx = jitter(stroke[pi][0] * W, 1.5);
             const wy = jitter(stroke[pi][1] * H, 1.5);
             const dx = wx - prevX;
             const dy = wy - prevY;
-
             drawSegment(prevX, prevY, wx, wy, prevDX, prevDY);
-
-            prevDX = dx;
-            prevDY = dy;
-            prevX = wx;
-            prevY = wy;
+            prevDX = dx; prevDY = dy;
+            prevX = wx; prevY = wy;
             pi++;
-
             return setTimeout(drawNextPoint, 15 + Math.random() * 22);
         }
-        si++;
-        pi = 0;
-        prevX = null; prevY = null;
-        prevDX = 0; prevDY = 0;
-
-        if (si < letter.strokes.length) {
-            return setTimeout(drawNextPoint, 360);
-        }
+        si++; pi = 0;
+        prevX = null; prevY = null; prevDX = 0; prevDY = 0;
+        if (si < letter.strokes.length) return setTimeout(drawNextPoint, 360);
         addToStrip(letter.char);
         setTimeout(() => {
             li = (li + 1) % letters.length;
             si = 0; pi = 0;
-            prevX = null; prevY = null;
-            prevDX = 0; prevDY = 0;
+            prevX = null; prevY = null; prevDX = 0; prevDY = 0;
             ctx.clearRect(0, 0, W, H);
             charLabel.textContent = letters[li].char;
             drawNextPoint();
@@ -395,4 +360,228 @@ if (drawCanvas) {
 
     charLabel.textContent = letters[0].char;
     setTimeout(drawNextPoint, 400);
+})();
+
+(function () {
+    const downloadBtn = document.getElementById('downloadBtn');
+    if (!downloadBtn) return;
+
+    const statusMsg      = document.getElementById('statusMsg');
+    const buildBanner    = document.getElementById('buildBanner');
+    const buildBannerMsg = document.getElementById('buildBannerMsg');
+
+    function setBannerState(msg, done) {
+        buildBannerMsg.textContent = msg;
+        buildBanner.classList.toggle('build-banner--done', !!done);
+        buildBanner.classList.remove('build-banner--hidden');
+        if (done) setTimeout(() => buildBanner.classList.add('build-banner--hidden'), 2800);
+    }
+
+    function buildFont(name) {
+        return fetch('/build/' + SESSION_ID, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: name || 'MyFont' })
+        }).then(r => r.json());
+    }
+
+    function reloadUserFont() {
+        const s = document.createElement('style');
+        s.textContent = "@font-face { font-family: 'UserFont'; src: url('/download/" + SESSION_ID + "?t=" + Date.now() + "') format('truetype'); }";
+        document.head.appendChild(s);
+    }
+    (function init() {
+        const baseStyle = document.createElement('style');
+        baseStyle.textContent =
+            "@font-face { font-family: 'UserFont'; src: url('/download/" + SESSION_ID + "') format('truetype'); } " +
+            ".preview-text { font-family: 'UserFont', 'Patrick Hand', cursive; }";
+        document.head.appendChild(baseStyle);
+
+        setBannerState('Building your font…');
+        statusMsg.textContent = 'Building your font…';
+        downloadBtn.disabled = true;
+
+        buildFont('MyFont').then(function(data) {
+            if (data.error) {
+                statusMsg.textContent = 'Build failed: ' + data.error;
+                setBannerState('Build failed.', false);
+                return;
+            }
+            statusMsg.textContent = 'Font ready — click Download!';
+            downloadBtn.disabled = false;
+            reloadUserFont();
+            setBannerState('Font built successfully!', true);
+        }).catch(function() {
+            statusMsg.textContent = 'Something went wrong.';
+            setBannerState('Build failed.', false);
+        });
+
+        loadGlyphGallery();
+    })();
+    downloadBtn.addEventListener('click', function() {
+        const name = document.getElementById('fontName').value.trim() || 'MyFont';
+        statusMsg.textContent = 'Saving…';
+        setBannerState('Saving font…');
+        buildFont(name).then(function() {
+            window.location.href = '/download/' + SESSION_ID;
+        });
+    });
+    document.getElementById('sizeSlider').addEventListener('input', function() {
+        document.getElementById('previewDisplay').style.fontSize = this.value + 'px';
+        document.getElementById('sizeVal').textContent = this.value + 'px';
+    });
+    document.getElementById('spacingSlider').addEventListener('input', function() {
+        document.getElementById('previewDisplay').style.letterSpacing = this.value + 'px';
+        document.getElementById('spacingVal').textContent = this.value + 'px';
+    });
+    document.getElementById('lineSlider').addEventListener('input', function() {
+        const val = (this.value / 100).toFixed(1);
+        document.getElementById('previewDisplay').style.lineHeight = val;
+        document.getElementById('lineVal').textContent = val;
+    });
+
+    document.querySelectorAll('.preset-btn').forEach(function(b) {
+        b.addEventListener('click', function() {
+            document.querySelectorAll('.preset-btn').forEach(function(x) { x.classList.remove('active'); });
+            b.classList.add('active');
+            document.getElementById('previewDisplay').textContent = b.dataset.text;
+        });
+    });
+
+    var darkToggle = document.getElementById('darkToggle');
+    var previewBox = document.getElementById('previewBox');
+    var dark = false;
+    darkToggle.addEventListener('click', function() {
+        dark = !dark;
+        previewBox.classList.toggle('dark-mode', dark);
+        darkToggle.innerHTML = dark
+            ? '<i class="fas fa-sun"></i> Light'
+            : '<i class="fas fa-moon"></i> Dark';
+    });
+    function loadGlyphGallery() {
+        fetch('/glyphs/' + SESSION_ID).then(function(r) { return r.json(); }).then(function(data) {
+            var gallery = document.getElementById('glyphGallery');
+            var badge   = document.getElementById('glyphCountBadge');
+            gallery.innerHTML = '';
+            if (!data.glyphs || data.glyphs.length === 0) {
+                gallery.innerHTML = '<p class="glyph-loading">No glyphs found.</p>';
+                return;
+            }
+            badge.textContent = data.glyphs.length + ' glyphs';
+            data.glyphs.forEach(function(g) {
+                var tile = document.createElement('div');
+                tile.className = 'glyph-tile';
+                tile.title = 'Click to redraw "' + g.char + '"';
+                var safeChar = g.char === '<' ? '&lt;' : g.char === '>' ? '&gt;' : g.char;
+                tile.innerHTML =
+                    '<div class="glyph-tile-img-wrap">' +
+                        '<img src="/glyph_img/' + SESSION_ID + '/' + g.code + '?t=' + Date.now() + '" alt="' + safeChar + '" id="glyph-img-' + g.code + '">' +
+                        '<div class="glyph-tile-overlay"><i class="fas fa-pencil"></i></div>' +
+                    '</div>' +
+                    '<span>' + safeChar + '</span>';
+                tile.addEventListener('click', function() { openRedrawModal(g.char, g.code); });
+                gallery.appendChild(tile);
+            });
+        });
+    }
+    var modalChar = null, modalCode = null, mDrawing = false;
+    var modal      = document.getElementById('redrawModal');
+    var mCanvas    = document.getElementById('redrawCanvas');
+    var mCtx       = mCanvas.getContext('2d');
+    var mCharLabel = document.getElementById('modalCharLabel');
+    var mBrush     = document.getElementById('modalBrush');
+    var mBrushVal  = document.getElementById('modalBrushVal');
+
+    mCtx.strokeStyle = '#2d2d2d';
+    mCtx.lineWidth = 8;
+    mCtx.lineCap = 'round';
+    mCtx.lineJoin = 'round';
+
+    mBrush.addEventListener('input', function() {
+        mCtx.lineWidth = parseInt(this.value);
+        mBrushVal.textContent = this.value + 'px';
+    });
+
+    function mGetPos(e) {
+        var r = mCanvas.getBoundingClientRect();
+        var src = e.touches ? e.touches[0] : e;
+        return { x: src.clientX - r.left, y: src.clientY - r.top };
+    }
+
+    mCanvas.addEventListener('mousedown', function(e) { mDrawing = true; mCtx.beginPath(); var p = mGetPos(e); mCtx.moveTo(p.x, p.y); });
+    mCanvas.addEventListener('mousemove', function(e) { if (!mDrawing) return; var p = mGetPos(e); mCtx.lineTo(p.x, p.y); mCtx.stroke(); });
+    mCanvas.addEventListener('mouseup', function() { mDrawing = false; });
+    mCanvas.addEventListener('mouseleave', function() { mDrawing = false; });
+    mCanvas.addEventListener('touchstart', function(e) { e.preventDefault(); mDrawing = true; mCtx.beginPath(); var p = mGetPos(e); mCtx.moveTo(p.x, p.y); }, { passive: false });
+    mCanvas.addEventListener('touchmove', function(e) { e.preventDefault(); if (!mDrawing) return; var p = mGetPos(e); mCtx.lineTo(p.x, p.y); mCtx.stroke(); }, { passive: false });
+    mCanvas.addEventListener('touchend', function() { mDrawing = false; });
+
+    document.getElementById('modalClearBtn').addEventListener('click', function() {
+        mCtx.clearRect(0, 0, mCanvas.width, mCanvas.height);
+    });
+    document.getElementById('modalCancelBtn').addEventListener('click', closeModal);
+    document.getElementById('modalBackdrop').addEventListener('click', closeModal);
+
+    document.getElementById('modalSaveBtn').addEventListener('click', function() {
+        var pixels = mCtx.getImageData(0, 0, mCanvas.width, mCanvas.height).data;
+        var hasInk = false;
+        for (var i = 3; i < pixels.length; i += 4) { if (pixels[i] > 10) { hasInk = true; break; } }
+        if (!hasInk) return;
+
+        var saveBtn = document.getElementById('modalSaveBtn');
+        saveBtn.textContent = 'Saving…';
+        saveBtn.disabled = true;
+
+        var dataURL = mCanvas.toDataURL('image/png');
+        fetch('/save_glyph', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ session_id: SESSION_ID, char: modalChar, image: dataURL })
+        }).then(function() {
+            var thumb = document.getElementById('glyph-img-' + modalCode);
+            if (thumb) thumb.src = dataURL;
+            var name = document.getElementById('fontName').value.trim() || 'MyFont';
+            setBannerState('Rebuilding font…');
+            statusMsg.textContent = 'Rebuilding font…';
+            return buildFont(name);
+        }).then(function(data) {
+            if (data && !data.error) {
+                reloadUserFont();
+                statusMsg.textContent = 'Font updated!';
+                setBannerState('Font updated!', true);
+                setTimeout(function() { statusMsg.textContent = ''; }, 3000);
+            }
+            closeModal();
+            saveBtn.textContent = 'Save & Rebuild';
+            saveBtn.disabled = false;
+        });
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if (modal.getAttribute('aria-hidden') === 'true') return;
+        if (e.key === 'Escape') closeModal();
+        if (e.key === 'Enter') document.getElementById('modalSaveBtn').click();
+        if (e.key === 'Backspace' && e.target === document.body) {
+            e.preventDefault();
+            mCtx.clearRect(0, 0, mCanvas.width, mCanvas.height);
+        }
+    });
+
+    function openRedrawModal(char, code) {
+        modalChar = char; modalCode = code;
+        mCharLabel.textContent = char;
+        mCtx.clearRect(0, 0, mCanvas.width, mCanvas.height);
+        var img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = function() { mCtx.drawImage(img, 0, 0, mCanvas.width, mCanvas.height); };
+        img.src = '/glyph_img/' + SESSION_ID + '/' + code + '?t=' + Date.now();
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+        mCtx.clearRect(0, 0, mCanvas.width, mCanvas.height);
+    }
 })();
