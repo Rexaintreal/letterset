@@ -89,7 +89,8 @@ def build(session_id):
     try:
         data = request.get_json(silent=True) or {}
         font_name = data.get('name', 'MyFont')[:32].strip() or 'MyFont'
-        out = build_font(folder, font_name=font_name)
+        fallback  = data.get('fallback', 'none')
+        out = build_font(folder, font_name=font_name, fallback=fallback)
         return jsonify({'ttf': f'/download/{session_id}'})
     except Exception as e:
         import traceback

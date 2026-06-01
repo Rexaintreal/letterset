@@ -46,6 +46,18 @@
                 <div class="preview-header">
                     <h1 class="upload-title" style="display:flex; align-items:center; gap:0.5rem; justify-content:center;"><i class="fas fa-check-circle" style="color:#4caf50; font-size:1.6rem;"></i> Your font is ready!</h1>
                     <p class="upload-sub">Give it a name, try it out below, then download your <strong>.ttf</strong> file.</p>
+                    <div class="font-name-wrap" style="margin-top:0.6rem;">
+                        <label class="font-name-label" for="fallbackFont">
+                            Fallback font
+                            <span style="font-size:0.78rem;color:#aaa;font-weight:400;">— fills characters you didn't draw</span>
+                        </label>
+                        <select id="fallbackFont" class="font-name-input" style="cursor:pointer; background:#fdfbf7;">
+                            <option value="none">None — only my drawn glyphs</option>
+                            <option value="sans">Sans-serif (DejaVu Sans)</option>
+                            <option value="serif">Serif (DejaVu Serif)</option>
+                            <option value="mono">Monospace (DejaVu Mono)</option>
+                        </select>
+                    </div>
                     <div class="font-name-wrap">
                         <label class="font-name-label" for="fontName">Font name</label>
                         <input type="text" id="fontName" placeholder="My Handwriting" maxlength="32" class="font-name-input" autocomplete="off" spellcheck="false">

@@ -388,10 +388,11 @@ if (drawCanvas) {
     document.getElementById('errorModalDismissBtn').addEventListener('click', closeErrorModal);
     document.getElementById('errorModalBackdrop').addEventListener('click', closeErrorModal);
     function buildFont(name) {
+        const fallback = (document.getElementById('fallbackFont') || {}).value || 'none';
         return fetch('/build/' + SESSION_ID, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name: name || 'MyFont' })
+            body: JSON.stringify({ name: name || 'MyFont', fallback: fallback })
         }).then(r => r.json());
     }
 
@@ -460,7 +461,27 @@ if (drawCanvas) {
             document.getElementById('previewDisplay').textContent = b.dataset.text;
         });
     });
-
+    var fallbackFont = document.getElementById('fallbackFont');
+    if (fallbackFont) {
+        fallbackFont.addEventListener('change', function() {
+            var name = document.getElementById('fontName').value.trim() || 'MyFont';
+            setBannerState('Rebuilding with fallback…');
+            statusMsg.textContent = 'Rebuilding…';
+            downloadBtn.disabled = true;
+            buildFont(name).then(function(data) {
+                if (data.error) {
+                    statusMsg.textContent = 'Build failed.';
+                    setBannerState('Could not build font.', false);
+                    showErrorModal(data.error);
+                } else {
+                    reloadUserFont();
+                    statusMsg.textContent = 'Font ready — click Download!';
+                    downloadBtn.disabled = false;
+                    setBannerState('Font rebuilt!', true);
+                }
+            });
+        });
+    }
     var darkToggle = document.getElementById('darkToggle');
     var previewBox = document.getElementById('previewBox');
     var dark = false;
