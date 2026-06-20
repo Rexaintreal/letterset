@@ -4,10 +4,34 @@ import uuid
 import json, base64
 from processing.build_font import build_font
 from processing.process_sheet import process_sheet
+import threading
+import time as time_module
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads'
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
+def cleanup_old_sessions():
+    while True:
+        time_module.sleep(3600) #running every hour
+        now = time_module.time()
+        upload_dir = app.config['UPLOAD_FOLDER']
+        try:
+            for name in os.listdir(upload_dir):
+                path = os.path.join(upload_dir, name)
+                if not os.path.isdir(path):
+                    #also delete loose images files older than 24h
+                    if os.path.isfile(path) and now - os.path.getmtime(path) > 86400:
+                        os.remove(path)
+                    continue
+                if now - os.path.getmtime(path) > 86400:
+                    import shutil
+                    shutil.rmtree(path, ignore_errors=True)
+                    print(f'Cleaned up session: {name}')
+        except Exception as e:
+            print(f'Cleanup error: {e}')
+
+threading.Thread(target=cleanup_old_sessions, daemon=True).start()
 
 MIN_GLYPHS = 5
 CHARS = list('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,!?()-_/@#&+')
