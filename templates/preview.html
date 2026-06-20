@@ -153,6 +153,41 @@
             </div>
         </div>
         <script>const SESSION_ID = "{{ session_id }}";</script>
+        <script>
+            window.confetti = function(opts) {
+                const count = opts.particleCount || 60;
+                const spread = opts.spread || 70;
+                const ox = (opts.origin && opts.origin.x != null) ? opts.origin.x : 0.5;
+                const oy = (opts.origin && opts.origin.y != null) ? opts.origin.y : 0.5;
+                const colors = opts.colors || ['#ff4d4d','#ffd700','#2d5da1','#2d2d2d','#ffffff'];
+                for (let i = 0; i < count; i++) {
+                    const el = document.createElement('div');
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    const size = 6 + Math.random() * 6;
+                    const angle = (Math.random() - 0.5) * spread * (Math.PI / 180) * 2;
+                    const speed = 4 + Math.random() * 6;
+                    const vx = Math.sin(angle) * speed;
+                    let vy = -(3 + Math.random() * speed);
+                    let x = ox * window.innerWidth;
+                    let y = oy * window.innerHeight;
+                    el.style.cssText = `position:fixed;width:${size}px;height:${size}px;background:${color};border-radius:${Math.random()>0.5?'50%':'2px'};left:${x}px;top:${y}px;pointer-events:none;z-index:9999;`;
+                    document.body.appendChild(el);
+                    let frame = 0;
+                    (function animate() {
+                        frame++;
+                        x += vx;
+                        vy += 0.2;
+                        y += vy;
+                        el.style.left = x + 'px';
+                        el.style.top = y + 'px';
+                        el.style.opacity = Math.max(0, 1 - frame / 80);
+                        if (frame < 80) requestAnimationFrame(animate);
+                        else el.remove();
+                    })();
+                }
+            };
+        </script>
+        <script src="https://unpkg.com/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
         <script src="{{ url_for('static', filename='js/script.js') }}"></script>
     </body>
 </html>

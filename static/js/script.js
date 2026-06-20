@@ -194,6 +194,39 @@ if (drawCanvas) {
         }
         return true;
     }
+    function buildCharGrid() {
+        const grid = document.getElementById('charGrid');
+        if (!grid) return;
+        grid.innerHTML = '';
+        chars.forEach((char, i) => {
+            const btn = document.createElement('button');
+            btn.id = 'gridBtn-' + i;
+            btn.textContent = char;
+            btn.style.cssText = `font-family:'Patrick Hand',cursive;font-size:0.7rem;width:26px;height:26px;border:1.5px solid #e5e0d8;border-radius:5px;background:white;color:#aaa;cursor:pointer;transition:all 0.1s ease;padding:0;line-height:1;`;
+            btn.addEventListener('click', () => {
+                saveCurrentDrawing();
+                goToChar(i);
+            });
+            grid.appendChild(btn);
+        });
+    }
+
+    function updateCharGrid() {
+        chars.forEach((char, i) => {
+            const btn = document.getElementById('gridBtn-' + i);
+            if (!btn) return;
+            if (i === current) {
+                btn.style.cssText += 'background:#2d2d2d;color:white;border-color:#2d2d2d;';
+            } else if (drawings[i] !== null) {
+                btn.style.cssText += 'background:#edfff3;color:#2d2d2d;border-color:#4caf50;';
+            } else if (skipped.has(i)) {
+                btn.style.cssText += 'background:#fff9c4;color:#8a7a00;border-color:#ffd700;';
+            } else {
+                btn.style.cssText += 'background:white;color:#aaa;border-color:#e5e0d8;';
+            }
+        });
+    }
+
     function updateProgress() {
         const total = chars.length;
         const doneCount = drawings.filter(d => d !== null).length;
@@ -239,6 +272,7 @@ if (drawCanvas) {
         updateProgress();
         restoreDrawing(current);
         updateStrip();
+        updateCharGrid();
     }
     function getPos(e) {
         const r = drawCanvas.getBoundingClientRect();
@@ -316,7 +350,9 @@ if (drawCanvas) {
             undoStroke();
         }
     });
+    buildCharGrid();
     updateProgress();
+    updateCharGrid();
 }
 
 (function () {
@@ -438,6 +474,29 @@ if (drawCanvas) {
     const buildBanner    = document.getElementById('buildBanner');
     const buildBannerMsg = document.getElementById('buildBannerMsg');
 
+    function fireConfetti() {
+        confetti({
+            particleCount: 80,
+            spread: 70,
+            origin: { y: 0.55 },
+            colors: ['#2d2d2d', '#ff4d4d', '#ffd700', '#2d5da1', '#ffffff']
+        });
+        setTimeout(() => {
+            confetti({
+                particleCount: 40,
+                spread: 50,
+                origin: { y: 0.45, x: 0.35 },
+                colors: ['#2d2d2d', '#ff4d4d', '#ffd700']
+            });
+            confetti({
+                particleCount: 40,
+                spread: 50,
+                origin: { y: 0.45, x: 0.65 },
+                colors: ['#2d5da1', '#ffffff', '#ffd700']
+            });
+        }, 200);
+    }
+
     function setBannerState(msg, done) {
         buildBannerMsg.textContent = msg;
         buildBanner.classList.toggle('build-banner--done', !!done);
@@ -488,10 +547,11 @@ if (drawCanvas) {
                 showErrorModal(data.error);
                 return;
             }
-            statusMsg.textContent = 'Font ready — click Download!';
+            statusMsg.textContent = 'Font ready click Download!';
             downloadBtn.disabled = false;
             reloadUserFont();
             setBannerState('Font built successfully!', true);
+            if (typeof confetti === 'function') fireConfetti();
         }).catch(function() {
             statusMsg.textContent = 'Build failed.';
             setBannerState('Build failed.', false);
