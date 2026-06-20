@@ -29,9 +29,14 @@
         <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Patrick+Hand&display=swap" rel="stylesheet">
     </head>
     <body style="overflow:hidden; height:100vh; display:flex; flex-direction:column;">
-        <nav class="nav-bar" style="flex-shrink:0;">
+        <nav class="nav-bar">
             <a href="/" class="nav-logo">Letterset</a>
-            <a href="/" class="btn-secondary">✕ Cancel</a>
+            <button class="nav-hamburger" id="navToggle" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+            <div class="nav-links" id="navLinks">
+                <a href="/" class="btn-secondary">Cancel</a>
+            </div>
         </nav>
         <main style="display:flex; gap:1.5rem; padding:1.25rem 2rem; flex:1; min-height:0; box-sizing:border-box; align-items:stretch;">
         <div style="display:flex; flex-direction:column; gap:0.75rem; flex:1.2; min-width:0; min-height:0;">

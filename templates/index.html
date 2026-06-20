@@ -32,8 +32,11 @@
     <body>
         <nav class="nav-bar">
             <a href="/" class="nav-logo">Letterset</a>
-            <div style="display: flex; gap: 0.6rem; align-items: center;">
-                <a href="/upload" class="btn-secondary" style="font-size: 0.85rem; padding: 0.35rem 0.8rem;">Upload  sheet</a>
+            <button class="nav-hamburger" id="navToggle" aria-label="Mennu">
+                <span></span><span></span><span></span>
+            </button>
+            <div class="nav-links" id="navLinks">
+                <a href="/upload" class="btn-secondary" style="font-size:0.85rem;padding: 0.35rem 0.8rem;">Upload Sheet</a>
                 <a href="/draw" class="btn-primary">Draw my font</a>
             </div>
         </nav>

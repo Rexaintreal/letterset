@@ -623,3 +623,13 @@ if (drawCanvas) {
         mCtx.clearRect(0, 0, mCanvas.width, mCanvas.height);
     }
 })();
+
+// mobile nav toggle
+const navToggle = document.getElementById('navToggle');
+const navLinks = document.getElementById('navLinks');
+if (navToggle) {
+    navToggle.addEventListener('click', () => {
+        navToggle.classList.toggle('open');
+        navLinks.classList.toggle('open');
+    });
+}
