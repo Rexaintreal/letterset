@@ -8,17 +8,26 @@
   <img src="https://img.shields.io/badge/HTML-E34F26?style=flat&logo=html5&logoColor=white" alt="HTML"/>
   <img src="https://img.shields.io/badge/CSS-1572B6?style=flat&logo=css3&logoColor=white" alt="CSS"/>
   <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black" alt="JavaScript"/>
-  <img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" alt="GitHub"/>
   <img src="https://img.shields.io/badge/License-MIT-green?style=flat" alt="MIT License"/>
 </p>
 
-Letterset turns your handwriting into a real font file. You draw each character in the browser or fill out a printed sheet, and the app converts your drawings into a .ttf file you can install on any computer.
+Letterset turns your handwriting into a real `.ttf` font file. Draw each character in the browser or fill out a printed sheet, and the app converts your drawings into a font you can install on any computer.
 
 ## Live Link
 
 The project is hosted at: https://letterset.pythonanywhere.com/
 
-Feel free to test it, suggest improvements, or contribute to the project.
+## What's new
+
+- **Fully mobile responsive** as it works on phones and tablets with touch drawing support
+- **Eraser Tool** added it fixes mistakes without clearing the whole canvas
+- **Undo (Ctrl+Z)** can now step back through your strokes one at a time
+- **Character jump grid** can click any character to jump directly to it
+- **Click preview grid** click any drawn cahracter in the "So far" panel to redraw and edit it
+- **Live completion ring** a circular progress indicator showing drawn vs skipped vs remaining
+- **Completion Confetti** fires when your font builds succesfully on the preview page
+- **Scroll Animation** Fade in animations for various pages
+- **Hamburger Navbar** for mobile navigation in all pages :3
 
 ## Tech Stack
 
@@ -90,12 +99,11 @@ Each drawn character is saved as a PNG. When you trigger a build, the app reads 
 
 ## Contributing
 
-Contributions and suggestions are welcome. Fork the repository, make your changes on a new branch, and open a pull request. If you have a bigger idea, open an issue first so we can discuss it.
+Fork, branch, PR. For a bigger ideas open an issue first.
 
-Some areas that could use improvement:
-- Smoother curve fitting using Bezier curves instead of straight segments
-- Better sheet detection under varied lighting
-- Support for more character sets
+Areas that could use work
+- More langauge and supports
+- Better sheet detection under varied lighting conditions
 
 ## Requirements
 

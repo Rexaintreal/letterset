@@ -1,3 +1,7 @@
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     background-color: #fdfbf7;
     background-image: radial-gradient(#e5e0d8 1px, transparent 1px);
