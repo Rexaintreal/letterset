@@ -133,6 +133,22 @@ if (drawCanvas) {
         document.getElementById('brushVal').textContent = this.value + 'px';
     });
 
+    let eraserMode = false;
+    document.getElementById('penBtn').addEventListener('click', () => {
+        eraserMode = false;
+        ctx.globalCompositeOperation = 'source-over';
+        document.getElementById('penBtn').classList.add('active');
+        document.getElementById('penbtn').classList.remove('eraser-active');
+        document.getElementById('eraserBtn').classList.remove('active', 'eraser-active');
+    });
+
+    document.getElementById('eraserBtn').addEventListener('click', () => {
+        eraserMode = true;
+        ctx.globalCompositeOperation = 'destination-out';
+        document.getElementById('eraserBtn').classList.add('active', 'eraser-active');
+        document.getElementById('penBtn').classList.remove('active');
+    });
+
     function resizeCanvas() {
         const wrap = drawCanvas.parentElement;
         const w = wrap.clientWidth;
@@ -211,6 +227,10 @@ if (drawCanvas) {
 
     document.getElementById('clearBtn').addEventListener('click', () => {
         ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+        eraserMode = false;
+        ctx.globalCompositeOperation = 'source-over';
+        document.getElementById('penBtn').classList.add('active');
+        document.getElementById('eraserBtn').classList.remove('active', 'eraser-active');
     });
     document.getElementById('backBtn').addEventListener('click', () => {
         if (current === 0) return;
@@ -225,6 +245,10 @@ if (drawCanvas) {
         else goToChar(next);
     });
     document.getElementById('nextBtn').addEventListener('click', () => {
+        eraserMode = false;
+        ctx.globalCompositeOperation = 'source-over';
+        document.getElementById('penBtn').classList.add('active');
+        document.getElementById('eraserBtn').classList.remove('active', 'eraser-active');
         if (isCanvasEmpty()) return;
         const dataURL = drawCanvas.toDataURL('image/png');
         drawings[current] = dataURL;
