@@ -248,8 +248,14 @@ if (drawCanvas) {
             if (!src) continue;
             const img = document.createElement('img');
             img.src = src;
-            img.title = chars[i];
-            img.style.cssText = 'width:100%; aspect-ratio:1; object-fit:contain; border:1px solid #e5e0d8; border-radius:4px; background:white; display:block; min-height:72px;';
+            img.title = 'Click to redraw "' + chars[i] + '"';
+            img.style.cssText = 'width:100%; aspect-ratio:1; object-fit:contain; border:1px solid #e5e0d8; border-radius:4px; background:white; display:block; min-height:72px; cursor:pointer; transition: border-color 0.15s;';
+            img.addEventListener('mouseover', () => img.style.borderColor = '#2d5da1');
+            img.addEventListener('mouseout', () => img.style.borderColor = '#e5e0d8');
+            img.addEventListener('click', () => {
+                saveCurrentDrawing();
+                goToChar(i);
+            });
             container.appendChild(img);
         }
     }
