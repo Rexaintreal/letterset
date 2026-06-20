@@ -195,9 +195,17 @@ if (drawCanvas) {
         return true;
     }
     function updateProgress() {
-        document.getElementById('drawProgress').textContent = (current + 1) + ' of ' + chars.length;
-        const fill = document.getElementById('progressBarFill');
-        if (fill) fill.style.width = Math.round((current / chars.length) * 100) + '%';
+        const total = chars.length;
+        const doneCount = drawings.filter(d => d !== null).length;
+        const skipCount = skipped.size;
+        const totalDone = doneCount + skipCount;
+        document.getElementById('ringCount').textContent = totalDone;
+        const circ = 314;
+        const frac = totalDone / total;
+        document.getElementById('ringDone').style.strokeDashoffset = circ - frac * circ;
+        document.getElementById('ringSkipped').style.strokeDasharray = '0 ' + circ;
+        document.getElementById('legendDone').textContent = doneCount + ' drawn';
+        document.getElementById('legendSkipped').textContent = skipCount + ' skipped';
     }
     function updateStrip() {
         const container = document.getElementById('previewChars');
