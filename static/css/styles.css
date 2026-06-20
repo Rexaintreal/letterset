@@ -1504,3 +1504,40 @@ body {
     transition-delay: 0.3s;
 }
 
+/*mobile draw page responsiveness*/
+@media (max-width: 768px) {
+    body[data-page="draw"] main,
+    .draw-page-main {
+        flex-direction: column !important;
+        padding: 0.75rem 1rem !important;
+        gap: 1rem !important;
+        overflow-y: auto !important;
+    }
+
+    .draw-preview-side {
+        display: none !important;
+    }
+
+    .draw-canvas-wrap {
+        aspect-ratio: 1 / 1;
+        width: 100%;
+        height: auto !important;
+    }
+
+    .draw-canvas {
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    .draw-actions {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .draw-toolbar {
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        padding: 0.6rem 1rem;
+        border-radius: 12px;
+    }
+}

@@ -28,7 +28,7 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
         <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Patrick+Hand&display=swap" rel="stylesheet">
     </head>
-    <body style="overflow:hidden; height:100vh; display:flex; flex-direction:column;">
+    <body data-page="draw" style="overflow:hidden; height:100vh; display:flex; flex-direction:column;">
         <nav class="nav-bar">
             <a href="/" class="nav-logo">Letterset</a>
             <button class="nav-hamburger" id="navToggle" aria-label="Menu">
@@ -46,7 +46,7 @@
                         <div id="progressBarFill" style="height:100%; width:0%; background:#2d2d2d; border-radius:99px; transition:width 0.3s ease;"></div>
                     </div>
                     <h1 class="draw-prompt" style="font-size:clamp(1.4rem, 3vw, 2.5rem); margin:0.1rem 0;">Draw: <span id="currentChar">A</span></h1>
-                    <p class="draw-hint" style="margin:0;">Fill the box naturally — don't worry about size.</p>
+                    <p class="draw-hint" style="margin:0;">Fill the box naturally don't worry about size.</p>
                     <p class="draw-hint" style="margin:0; opacity:0.6;">Enter = next &nbsp;·&nbsp; ← = back &nbsp;·&nbsp; Backspace = clear</p>
                 </div>
                 <div class="draw-toolbar" style="flex-shrink:0;">
@@ -64,7 +64,7 @@
                     <button class="btn-primary" id="nextBtn">Next →</button>
                 </div>
             </div>
-            <div style="flex:1; min-width:0; display:flex; flex-direction:column; gap:0.5rem;">
+            <div class="draw-preview-side" style="flex:1; min-width:0; display:flex; flex-direction:column; gap:0.5rem;">
                 <span class="tool-label" style="font-size:0.85rem; flex-shrink:0;">So far</span>
                 <div id="previewChars" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(72px, 1fr)); gap:4px; align-content:start;"></div>
             </div>
