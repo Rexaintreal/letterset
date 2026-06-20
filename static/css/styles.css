@@ -1624,3 +1624,34 @@ body {
     }
 }
  
+
+/* upload page mobile*/
+@media (max-width: 600px) {
+    body {
+        overflow-y: auto !important;
+        height: auto !important;
+    }
+
+    .upload-main {
+        padding: 2rem 1rem;
+        min-height: 100vh;
+        align-items: flex-start;
+    }
+
+    .upload-card {
+        padding: 2rem 1.25rem;
+        border-radius: 24px;
+        margin-bottom: 2rem;
+    }
+}
+
+.drop-zone {
+    transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.drop-zone.dragover {
+    background: #fff9c4;
+    border-style: solid;
+    transform: scale(1.02);
+    box-shadow: 0 8px 24px rgba(45, 45, 45, 0.12);
+}
