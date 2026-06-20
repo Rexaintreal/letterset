@@ -126,6 +126,8 @@ if (drawCanvas) {
     const drawings = new Array(chars.length).fill(null);
     const skipped = new Set();
     let drawing = false;
+    let drawHistory = [];
+    const MAX_HISTORY = 30;
 
     ctx.strokeStyle = '#2d2d2d';
     document.getElementById('brushSlider').addEventListener('input', function() {
@@ -138,7 +140,7 @@ if (drawCanvas) {
         eraserMode = false;
         ctx.globalCompositeOperation = 'source-over';
         document.getElementById('penBtn').classList.add('active');
-        document.getElementById('penbtn').classList.remove('eraser-active');
+        document.getElementById('penBtn').classList.remove('eraser-active');
         document.getElementById('eraserBtn').classList.remove('active', 'eraser-active');
     });
 
@@ -148,6 +150,24 @@ if (drawCanvas) {
         document.getElementById('eraserBtn').classList.add('active', 'eraser-active');
         document.getElementById('penBtn').classList.remove('active');
     });
+
+    function saveSnapshot() {
+        drawHistory.push(drawCanvas.toDataURL('image/png'));
+        if (drawHistory.length > MAX_HISTORY) drawHistory.shift();
+    }
+
+    function undoStroke() {
+        if (drawHistory.length === 0) {
+            ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+            return;
+        }
+        drawHistory.pop();
+        ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+        if (drawHistory.length === 0) return;
+        const img = new Image();
+        img.onload = () => ctx.drawImage(img, 0, 0, drawCanvas.width, drawCanvas.height);
+        img.src = drawHistory[drawHistory.length - 1];
+    }
 
     function resizeCanvas() {
         const wrap = drawCanvas.parentElement;
@@ -205,6 +225,7 @@ if (drawCanvas) {
         if (!isCanvasEmpty()) drawings[current] = drawCanvas.toDataURL('image/png');
     }
     function goToChar(index) {
+        drawHistory = [];
         current = index;
         document.getElementById('currentChar').textContent = chars[current];
         updateProgress();
@@ -219,11 +240,20 @@ if (drawCanvas) {
 
     drawCanvas.addEventListener('mousedown', e => { drawing = true; ctx.beginPath(); const p = getPos(e); ctx.moveTo(p.x, p.y); });
     drawCanvas.addEventListener('mousemove', e => { if (!drawing) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); });
-    drawCanvas.addEventListener('mouseup', () => drawing = false);
-    drawCanvas.addEventListener('mouseleave', () => drawing = false);
+    drawCanvas.addEventListener('mouseup', () => {
+        if (drawing) saveSnapshot();
+        drawing = false;
+    });
+    drawCanvas.addEventListener('mouseleave', () => {
+       if (drawing) saveSnapshot();
+       drawing = false; 
+    });
     drawCanvas.addEventListener('touchstart', e => { e.preventDefault(); drawing = true; ctx.beginPath(); const p = getPos(e); ctx.moveTo(p.x, p.y); });
     drawCanvas.addEventListener('touchmove', e => { e.preventDefault(); if (!drawing) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); });
-    drawCanvas.addEventListener('touchend', () => drawing = false);
+    drawCanvas.addEventListener('touchend', () => {
+        if (drawing) saveSnapshot();
+        drawing = false;
+    });
 
     document.getElementById('clearBtn').addEventListener('click', () => {
         ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
@@ -231,6 +261,9 @@ if (drawCanvas) {
         ctx.globalCompositeOperation = 'source-over';
         document.getElementById('penBtn').classList.add('active');
         document.getElementById('eraserBtn').classList.remove('active', 'eraser-active');
+    });
+    document.getElementById('undoBtn').addEventListener('click', () => {
+        undoStroke();
     });
     document.getElementById('backBtn').addEventListener('click', () => {
         if (current === 0) return;
@@ -270,6 +303,9 @@ if (drawCanvas) {
             ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
         } else if (e.key === 'ArrowLeft') {
             document.getElementById('backBtn').click();
+        } else if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
+            e.preventDefault();
+            undoStroke();
         }
     });
     updateProgress();
